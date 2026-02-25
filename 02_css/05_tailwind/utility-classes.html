@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DICT | Tailwind 유틸리티</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../00_assets/css/variables.css">
+  <link rel="stylesheet" href="../../00_assets/css/reset.css">
+  <link rel="stylesheet" href="../../00_assets/css/entry.css">
+  <!-- Tailwind CDN: 데모에만 사용. 실무는 CLI 빌드 사용 -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .vs-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: var(--text-sm);
+    }
+    .vs-table th, .vs-table td {
+      padding: var(--space-3) var(--space-4);
+      border-bottom: 1px solid var(--border-default);
+      text-align: left;
+      vertical-align: top;
+    }
+    .vs-table th {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--text-muted);
+      font-weight: var(--weight-bold);
+      text-transform: uppercase;
+    }
+    .vs-table td:first-child { font-family: var(--font-mono); color: var(--accent-purple); }
+    .vs-table td:nth-child(2) { color: var(--accent-orange); font-family: var(--font-mono); font-size: var(--text-xs); }
+    .vs-table tr:last-child td { border-bottom: none; }
+  </style>
+</head>
+<body>
+
+<div class="page-wrapper">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main-content">
+
+    <nav class="breadcrumb">
+      <a href="#">CSS</a><span>/</span>
+      <a href="#">Tailwind</a><span>/</span>
+      <span style="color:var(--text-primary)">유틸리티 클래스</span>
+    </nav>
+
+    <header class="entry-header">
+      <div class="entry-category-tag" style="background:rgba(56,189,248,0.12);color:var(--cat-tailwind);">
+        ● CSS / Tailwind
+      </div>
+      <h1 class="entry-title">Tailwind Utility</h1>
+      <p class="entry-definition">CSS를 클래스명으로 직접 HTML에 작성하는 유틸리티-퍼스트 방식</p>
+    </header>
+
+    <section class="entry-section" id="when" data-toc="언제 쓰는가">
+      <h2 class="section-title"><span class="section-icon icon-when">✦</span>언제 쓰는가</h2>
+      <div class="when-list">
+        <div class="when-item">
+          <span class="when-item-icon">⚡</span>
+          <div class="when-item-text">
+            <strong>React/Next.js 프로젝트에서 빠른 스타일링</strong>
+            <p>별도 CSS 파일 없이 컴포넌트 HTML에 바로 스타일을 붙인다. JSX와 스타일이 한 파일에 있어서 컴포넌트 단위 개발에 최적화되어 있다.</p>
+          </div>
+        </div>
+        <div class="when-item">
+          <span class="when-item-icon">📱</span>
+          <div class="when-item-text">
+            <strong>반응형을 인라인으로 바로 처리</strong>
+            <p><code style="font-family:var(--font-mono);font-size:0.8em;color:var(--accent-purple)">sm:flex-col md:flex-row lg:grid-cols-3</code>. 미디어쿼리 파일을 따로 열 필요 없이 클래스명만으로 분기 처리.</p>
+          </div>
+        </div>
+        <div class="when-item">
+          <span class="when-item-icon">🎨</span>
+          <div class="when-item-text">
+            <strong>디자인 시스템 없이 일관된 간격/색상 유지</strong>
+            <p>Tailwind의 spacing(4=1rem, 8=2rem)과 color scale을 따르면 디자이너 없어도 일관된 UI가 나온다. 취업 포트폴리오에 바로 쓸 수 있다.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry-section" id="syntax" data-toc="기본 문법">
+      <h2 class="section-title"><span class="section-icon icon-syntax">&lt;/&gt;</span>기본 문법</h2>
+      <div class="code-block-wrapper">
+        <div class="code-block-label">jsx — CSS vs Tailwind 비교</div>
+        <pre class="code-block">
+<span class="cm">/* CSS 방식 */</span>
+<span class="kw">const</span> Card = () =&gt; (
+  <span class="tag">&lt;div</span> <span class="atr">className</span>=<span class="str">"card"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;h2</span> <span class="atr">className</span>=<span class="str">"card-title"</span><span class="tag">&gt;</span>제목<span class="tag">&lt;/h2&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>
+);
+<span class="cm">/* → 별도 .css 파일 필요 */</span>
+
+<span class="cm">/* Tailwind 방식 */</span>
+<span class="kw">const</span> Card = () =&gt; (
+  <span class="tag">&lt;div</span> <span class="atr">className</span>=<span class="str">"p-6 rounded-lg border border-gray-700 bg-gray-800 hover:border-blue-500 transition-colors"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;h2</span> <span class="atr">className</span>=<span class="str">"text-lg font-bold text-white mb-2"</span><span class="tag">&gt;</span>제목<span class="tag">&lt;/h2&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>
+);
+<span class="cm">/* → CSS 파일 없음 */</span></pre>
+      </div>
+
+      <div style="background:var(--bg-elevated);border:1px solid var(--border-default);border-radius:var(--radius-md);overflow:hidden">
+        <table class="vs-table">
+          <thead><tr><th>CSS 속성</th><th>Tailwind 클래스</th><th>설명</th></tr></thead>
+          <tbody>
+            <tr><td>display: flex</td><td>flex</td><td>플렉스 컨테이너</td></tr>
+            <tr><td>align-items: center</td><td>items-center</td><td>교차축 중앙</td></tr>
+            <tr><td>justify-content: between</td><td>justify-between</td><td>주축 양 끝</td></tr>
+            <tr><td>gap: 16px</td><td>gap-4</td><td>4 = 1rem = 16px</td></tr>
+            <tr><td>padding: 24px</td><td>p-6</td><td>6 = 1.5rem = 24px</td></tr>
+            <tr><td>font-size: 18px</td><td>text-lg</td><td>lg = 1.125rem</td></tr>
+            <tr><td>font-weight: 700</td><td>font-bold</td><td>bold</td></tr>
+            <tr><td>border-radius: 8px</td><td>rounded-lg</td><td>lg = 0.5rem</td></tr>
+            <tr><td>@media(min-width:768px)</td><td>md:flex-row</td><td>768px 이상 적용</td></tr>
+            <tr><td>:hover { color: blue }</td><td>hover:text-blue-500</td><td>hover 상태</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="entry-section" id="demo" data-toc="라이브 데모">
+      <h2 class="section-title"><span class="section-icon icon-demo">▶</span>라이브 데모</h2>
+      <div class="demo-container">
+        <div class="demo-toolbar">
+          <div class="demo-toolbar-dots">
+            <span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span>
+          </div>
+          <span class="demo-toolbar-title">Tailwind로 만든 대시보드 카드 + 버튼</span>
+        </div>
+        <div class="demo-preview" style="background:#111827">
+
+          <!-- Tailwind 데모: 대시보드 stat 카드 -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+            <div class="bg-gray-800 border border-gray-700 rounded-lg p-4 hover:border-blue-500 transition-colors cursor-pointer">
+              <div class="text-xs text-gray-400 font-mono mb-1">총 매출</div>
+              <div class="text-2xl font-bold text-white">₩ 12.3M</div>
+              <div class="text-xs text-green-400 mt-1">▲ 12.4%</div>
+            </div>
+            <div class="bg-gray-800 border border-gray-700 rounded-lg p-4 hover:border-blue-500 transition-colors cursor-pointer">
+              <div class="text-xs text-gray-400 font-mono mb-1">주문 건수</div>
+              <div class="text-2xl font-bold text-white">1,243</div>
+              <div class="text-xs text-red-400 mt-1">▼ 2.1%</div>
+            </div>
+            <div class="bg-gray-800 border border-gray-700 rounded-lg p-4 hover:border-blue-500 transition-colors cursor-pointer">
+              <div class="text-xs text-gray-400 font-mono mb-1">신규 회원</div>
+              <div class="text-2xl font-bold text-white">87</div>
+              <div class="text-xs text-green-400 mt-1">▲ 5.8%</div>
+            </div>
+          </div>
+
+          <!-- Tailwind 버튼 세트 -->
+          <div class="flex flex-wrap gap-3 items-center">
+            <button type="button" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded transition-colors">저장</button>
+            <button type="button" class="px-4 py-2 bg-transparent border border-blue-500 text-blue-400 hover:bg-blue-500/10 text-sm rounded transition-colors">취소</button>
+            <button type="button" class="px-4 py-2 bg-red-600/20 border border-red-500/50 text-red-400 hover:bg-red-600/30 text-sm rounded transition-colors">삭제</button>
+            <button type="button" class="px-4 py-2 bg-gray-700 text-gray-300 text-sm rounded cursor-not-allowed opacity-50" disabled>처리 중</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry-section" id="mistakes" data-toc="자주 하는 실수">
+      <h2 class="section-title"><span class="section-icon icon-mistake">✕</span>자주 하는 실수</h2>
+      <div class="mistake-list">
+        <div class="mistake-item">
+          <div class="mistake-bad">
+            <div class="mistake-label label-bad">✕ CDN으로 프로덕션 배포</div>
+            <pre class="code-block" style="background:transparent;border:none;padding:var(--space-2) 0;font-size:var(--text-sm);">
+<span class="tag">&lt;script</span> <span class="atr">src</span>=<span class="str">"https://cdn.tailwindcss.com"</span><span class="tag">&gt;&lt;/script&gt;</span>
+<span class="cm">&lt;!-- 전체 CSS 로드 → 파일 크기 거대 --&gt;</span></pre>
+          </div>
+          <div class="mistake-good">
+            <div class="mistake-label label-good">✓ CLI 빌드로 사용 클래스만 추출</div>
+            <pre class="code-block" style="background:transparent;border:none;padding:var(--space-2) 0;font-size:var(--text-sm);">
+<span class="cm"># npm으로 설치 후 purge 적용</span>
+npm install -D tailwindcss
+npx tailwindcss init
+<span class="cm"># 빌드 결과: 사용한 클래스만 ~5kb</span></pre>
+            <div class="mistake-explanation">
+              ⚠️ CDN은 모든 클래스(3MB+)를 내려받는다. 실무/포트폴리오 배포엔 반드시 CLI 빌드. React 프로젝트라면 npx create-react-app 후 Tailwind 설정 가이드 따라가면 된다.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry-section" id="related" data-toc="연관 항목">
+      <h2 class="section-title"><span class="section-icon icon-related">↗</span>연관 항목</h2>
+      <div class="related-grid">
+        <a href="../02_layout/flexbox.html" class="related-card">
+          <div class="related-card-name">flexbox</div>
+          <div class="related-card-desc">flex / items-* / justify-*</div>
+        </a>
+        <a href="../03_responsive/media-query.html" class="related-card">
+          <div class="related-card-name">반응형</div>
+          <div class="related-card-desc">sm: md: lg: xl:</div>
+        </a>
+        <a href="#" class="related-card">
+          <div class="related-card-name">@apply</div>
+          <div class="related-card-desc">유틸리티를 CSS로 추출</div>
+        </a>
+      </div>
+    </section>
+
+  </main>
+</div>
+<script src="../../00_assets/js/navigation.js"></script>
+</body>
+</html>

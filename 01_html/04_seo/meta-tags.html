@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DICT | meta 태그</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../00_assets/css/variables.css">
+  <link rel="stylesheet" href="../../00_assets/css/reset.css">
+  <link rel="stylesheet" href="../../00_assets/css/entry.css">
+  <style>
+    .serp-preview {
+      background: #fff;
+      border-radius: var(--radius-md);
+      padding: var(--space-5);
+      max-width: 480px;
+    }
+    .serp-url  { font-size: 12px; color: #202124; margin-bottom: 2px; }
+    .serp-title{ font-size: 18px; color: #1a0dab; font-weight: 400; margin-bottom: 4px; line-height: 1.3; cursor: pointer; }
+    .serp-title:hover { text-decoration: underline; }
+    .serp-desc { font-size: 13px; color: #4d5156; line-height: 1.58; }
+    .og-preview {
+      background: #f0f2f5;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      max-width: 400px;
+    }
+    .og-image {
+      width: 100%;
+      height: 200px;
+      background: linear-gradient(135deg, #0d1117 0%, #161b22 50%, #21262d 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      color: var(--accent-blue);
+      font-size: var(--text-sm);
+    }
+    .og-content { padding: var(--space-3) var(--space-4); background: #fff; }
+    .og-domain  { font-size: 11px; color: #8a8d91; text-transform: uppercase; margin-bottom: 4px; }
+    .og-title   { font-size: 14px; font-weight: 700; color: #1c1e21; margin-bottom: 4px; line-height: 1.3; }
+    .og-desc    { font-size: 13px; color: #606770; line-height: 1.4; }
+  </style>
+</head>
+<body>
+
+<div class="page-wrapper">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main-content">
+
+    <nav class="breadcrumb">
+      <a href="#">HTML</a><span>/</span>
+      <a href="#">SEO</a><span>/</span>
+      <span style="color:var(--text-primary)">meta 태그</span>
+    </nav>
+
+    <header class="entry-header">
+      <div class="entry-category-tag" style="background:rgba(227,76,38,0.12);color:var(--cat-html);">
+        ● HTML / SEO
+      </div>
+      <h1 class="entry-title">&lt;meta&gt;</h1>
+      <p class="entry-definition">검색엔진과 소셜미디어에 페이지 정보를 전달하는 &lt;head&gt; 태그</p>
+    </header>
+
+    <section class="entry-section" id="when" data-toc="언제 쓰는가">
+      <h2 class="section-title"><span class="section-icon icon-when">✦</span>언제 쓰는가</h2>
+      <div class="when-list">
+        <div class="when-item">
+          <span class="when-item-icon">🔎</span>
+          <div class="when-item-text">
+            <strong>구글 검색결과에 제목/설명 표시 (SEO)</strong>
+            <p><code style="font-family:var(--font-mono);font-size:0.8em;color:var(--accent-purple)">description</code> 메타태그는 검색결과 스니펫에 표시된다. 직접 순위에는 영향 없지만 클릭률(CTR)에 영향을 준다.</p>
+          </div>
+        </div>
+        <div class="when-item">
+          <span class="when-item-icon">📤</span>
+          <div class="when-item-text">
+            <strong>카카오톡/슬랙/트위터 링크 공유 시 미리보기</strong>
+            <p>OG(Open Graph) 태그가 없으면 링크를 공유해도 빈 박스가 뜬다. 포트폴리오, 회사 사이트라면 필수.</p>
+          </div>
+        </div>
+        <div class="when-item">
+          <span class="when-item-icon">📱</span>
+          <div class="when-item-text">
+            <strong>모바일 뷰포트 설정</strong>
+            <p><code style="font-family:var(--font-mono);font-size:0.8em;color:var(--accent-purple)">viewport</code> 메타태그 없이는 모바일에서 데스크탑 레이아웃이 축소되어 표시된다. 반응형의 전제 조건.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry-section" id="syntax" data-toc="기본 문법">
+      <h2 class="section-title"><span class="section-icon icon-syntax">&lt;/&gt;</span>기본 문법</h2>
+      <div class="code-block-wrapper">
+        <div class="code-block-label">html — 실무 필수 세트</div>
+        <pre class="code-block">
+<span class="tag">&lt;head&gt;</span>
+  <span class="cm">&lt;!-- 기본 필수 --&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="atr">charset</span>=<span class="str">"UTF-8"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="atr">name</span>=<span class="str">"viewport"</span> <span class="atr">content</span>=<span class="str">"width=device-width, initial-scale=1.0"</span><span class="tag">&gt;</span>
+
+  <span class="cm">&lt;!-- SEO --&gt;</span>
+  <span class="tag">&lt;title&gt;</span>페이지 제목 | 사이트명<span class="tag">&lt;/title&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="atr">name</span>=<span class="str">"description"</span> <span class="atr">content</span>=<span class="str">"150자 이내 페이지 설명. 검색 스니펫에 표시됨."</span><span class="tag">&gt;</span>
+
+  <span class="cm">&lt;!-- Open Graph (카카오, 슬랙, 페이스북 미리보기) --&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="atr">property</span>=<span class="str">"og:type"</span>        <span class="atr">content</span>=<span class="str">"website"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="atr">property</span>=<span class="str">"og:title"</span>       <span class="atr">content</span>=<span class="str">"페이지 제목"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="atr">property</span>=<span class="str">"og:description"</span> <span class="atr">content</span>=<span class="str">"설명 텍스트"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="atr">property</span>=<span class="str">"og:image"</span>       <span class="atr">content</span>=<span class="str">"https://example.com/og-image.png"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="atr">property</span>=<span class="str">"og:url"</span>         <span class="atr">content</span>=<span class="str">"https://example.com/page"</span><span class="tag">&gt;</span>
+
+  <span class="cm">&lt;!-- Twitter Card --&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="atr">name</span>=<span class="str">"twitter:card"</span>  <span class="atr">content</span>=<span class="str">"summary_large_image"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="atr">name</span>=<span class="str">"twitter:title"</span> <span class="atr">content</span>=<span class="str">"페이지 제목"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;/head&gt;</span></pre>
+      </div>
+    </section>
+
+    <section class="entry-section" id="demo" data-toc="라이브 데모">
+      <h2 class="section-title"><span class="section-icon icon-demo">▶</span>라이브 데모</h2>
+      <div class="demo-container">
+        <div class="demo-toolbar">
+          <div class="demo-toolbar-dots">
+            <span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span>
+          </div>
+          <span class="demo-toolbar-title">meta 태그 적용 결과 미리보기</span>
+        </div>
+        <div class="demo-preview">
+          <p style="font-size:var(--text-xs);color:var(--text-muted);margin-bottom:var(--space-4);font-family:var(--font-mono);">Google 검색 스니펫</p>
+          <div class="serp-preview" style="margin-bottom:var(--space-6)">
+            <div class="serp-url">example.com › portfolio › project</div>
+            <div class="serp-title">김민이 포트폴리오 — 프론트엔드 개발자</div>
+            <div class="serp-desc">React, TypeScript 기반 대시보드 및 관리자 페이지 개발 경험. EMS, 물류관리 시스템 구현. 2024년 이직 준비 중인 주니어 프론트엔드 개발자의 포트폴리오입니다.</div>
+          </div>
+
+          <p style="font-size:var(--text-xs);color:var(--text-muted);margin-bottom:var(--space-4);font-family:var(--font-mono);">카카오톡 링크 공유 미리보기 (OG)</p>
+          <div class="og-preview">
+            <div class="og-image">og:image → 1200×630px 권장</div>
+            <div class="og-content">
+              <div class="og-domain">example.com</div>
+              <div class="og-title">김민이 포트폴리오 — 프론트엔드 개발자</div>
+              <div class="og-desc">React, TypeScript 기반 대시보드 및 관리자 페이지 개발 경험.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry-section" id="mistakes" data-toc="자주 하는 실수">
+      <h2 class="section-title"><span class="section-icon icon-mistake">✕</span>자주 하는 실수</h2>
+      <div class="mistake-list">
+        <div class="mistake-item">
+          <div class="mistake-bad">
+            <div class="mistake-label label-bad">✕ description 없이 배포</div>
+            <pre class="code-block" style="background:transparent;border:none;padding:var(--space-2) 0;font-size:var(--text-sm);">
+<span class="tag">&lt;head&gt;</span>
+  <span class="tag">&lt;title&gt;</span>My Portfolio<span class="tag">&lt;/title&gt;</span>
+  <span class="cm">&lt;!-- description 없음 --&gt;</span>
+<span class="tag">&lt;/head&gt;</span></pre>
+          </div>
+          <div class="mistake-good">
+            <div class="mistake-label label-good">✓ description + OG 세트</div>
+            <pre class="code-block" style="background:transparent;border:none;padding:var(--space-2) 0;font-size:var(--text-sm);">
+<span class="tag">&lt;meta</span> <span class="atr">name</span>=<span class="str">"description"</span> <span class="atr">content</span>=<span class="str">"포트폴리오 설명..."</span><span class="tag">&gt;</span>
+<span class="tag">&lt;meta</span> <span class="atr">property</span>=<span class="str">"og:title"</span> <span class="atr">content</span>=<span class="str">"My Portfolio"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;meta</span> <span class="atr">property</span>=<span class="str">"og:image"</span> <span class="atr">content</span>=<span class="str">"https://..."</span><span class="tag">&gt;</span></pre>
+            <div class="mistake-explanation">
+              ⚠️ 포트폴리오를 카카오톡으로 공유할 때 미리보기가 비어있으면 인상이 나쁘다. OG 태그는 배포 전 필수 체크 항목이다.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry-section" id="related" data-toc="연관 항목">
+      <h2 class="section-title"><span class="section-icon icon-related">↗</span>연관 항목</h2>
+      <div class="related-grid">
+        <a href="#" class="related-card">
+          <div class="related-card-name">&lt;title&gt;</div>
+          <div class="related-card-desc">브라우저 탭 제목</div>
+        </a>
+        <a href="#" class="related-card">
+          <div class="related-card-name">&lt;link rel&gt;</div>
+          <div class="related-card-desc">CSS, favicon 연결</div>
+        </a>
+        <a href="../03_accessibility/aria-label.html" class="related-card">
+          <div class="related-card-name">aria-label</div>
+          <div class="related-card-desc">접근성 속성</div>
+        </a>
+      </div>
+    </section>
+
+  </main>
+</div>
+<script src="../../00_assets/js/navigation.js"></script>
+</body>
+</html>

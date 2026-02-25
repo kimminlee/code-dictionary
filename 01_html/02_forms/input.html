@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DICT | &lt;input&gt;</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../00_assets/css/variables.css">
+  <link rel="stylesheet" href="../../00_assets/css/reset.css">
+  <link rel="stylesheet" href="../../00_assets/css/entry.css">
+  <style>
+    /* 데모 전용 스타일 */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+      margin-bottom: var(--space-5);
+    }
+    .form-label {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-medium);
+      color: var(--text-secondary);
+    }
+    .form-input {
+      width: 100%;
+      max-width: 320px;
+      padding: 10px 14px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-size: var(--text-sm);
+      font-family: var(--font-sans);
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+      outline: none;
+    }
+    .form-input:focus {
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 0 3px rgba(88,166,255,0.15);
+    }
+    .form-input::placeholder { color: var(--text-muted); }
+    .form-input:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .form-input.error  { border-color: var(--accent-red); }
+    .form-input.success{ border-color: var(--accent-green); }
+    .form-hint {
+      font-size: var(--text-xs);
+      color: var(--text-muted);
+    }
+    .form-hint.error-msg { color: var(--accent-red); }
+    .form-divider {
+      width: 100%;
+      height: 1px;
+      background: var(--border-default);
+      margin: var(--space-5) 0;
+    }
+    .type-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: var(--space-3);
+    }
+    .type-item {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-sm);
+      padding: var(--space-3) var(--space-4);
+    }
+    .type-name {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--accent-purple);
+      margin-bottom: var(--space-2);
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-wrapper">
+  <aside class="sidebar" id="sidebar"></aside>
+
+  <main class="main-content">
+
+    <nav class="breadcrumb">
+      <a href="#">HTML</a><span>/</span>
+      <a href="#">Forms</a><span>/</span>
+      <span style="color:var(--text-primary)">&lt;input&gt;</span>
+    </nav>
+
+    <header class="entry-header">
+      <div class="entry-category-tag" style="background:rgba(227,76,38,0.12);color:var(--cat-html);">
+        ● HTML / Forms
+      </div>
+      <h1 class="entry-title">&lt;input&gt;</h1>
+      <p class="entry-definition">사용자로부터 데이터를 입력받는 요소 — type에 따라 동작이 완전히 달라진다</p>
+    </header>
+
+    <!-- 언제 쓰는가 -->
+    <section class="entry-section" id="when" data-toc="언제 쓰는가">
+      <h2 class="section-title"><span class="section-icon icon-when">✦</span>언제 쓰는가</h2>
+      <div class="when-list">
+        <div class="when-item">
+          <span class="when-item-icon">🔍</span>
+          <div class="when-item-text">
+            <strong>검색창, 필터, 텍스트 입력</strong>
+            <p>대시보드 상단 검색, 테이블 필터링 입력창. <code style="font-family:var(--font-mono);font-size:0.8em;color:var(--accent-purple)">type="text"</code> 또는 <code style="font-family:var(--font-mono);font-size:0.8em;color:var(--accent-purple)">type="search"</code> 사용. search 타입은 브라우저가 X 버튼을 자동으로 제공한다.</p>
+          </div>
+        </div>
+        <div class="when-item">
+          <span class="when-item-icon">📅</span>
+          <div class="when-item-text">
+            <strong>날짜/시간 선택, 숫자 범위</strong>
+            <p><code style="font-family:var(--font-mono);font-size:0.8em;color:var(--accent-purple)">type="date"</code>, <code style="font-family:var(--font-mono);font-size:0.8em;color:var(--accent-purple)">type="number"</code>, <code style="font-family:var(--font-mono);font-size:0.8em;color:var(--accent-purple)">type="range"</code>. 브라우저 기본 UI를 활용하면 커스텀 없이도 실용적인 입력 컴포넌트가 된다.</p>
+          </div>
+        </div>
+        <div class="when-item">
+          <span class="when-item-icon">☑️</span>
+          <div class="when-item-text">
+            <strong>체크박스, 라디오 — 단일/다중 선택</strong>
+            <p>테이블 행 선택(checkbox), 옵션 그룹 선택(radio). <code style="font-family:var(--font-mono);font-size:0.8em;color:var(--accent-purple)">&lt;label&gt;</code> 과 반드시 연결해야 클릭 영역이 확장되고 접근성이 보장된다.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 기본 문법 -->
+    <section class="entry-section" id="syntax" data-toc="기본 문법">
+      <h2 class="section-title"><span class="section-icon icon-syntax">&lt;/&gt;</span>기본 문법</h2>
+
+      <div class="code-block-wrapper">
+        <div class="code-block-label">html — 필수 패턴</div>
+        <pre class="code-block">
+<span class="cm">&lt;!-- label + input 세트: 항상 같이 써라 --&gt;</span>
+<span class="tag">&lt;label</span> <span class="atr">for</span>=<span class="str">"email"</span><span class="tag">&gt;</span>이메일<span class="tag">&lt;/label&gt;</span>
+<span class="tag">&lt;input</span>
+  <span class="atr">type</span>=<span class="str">"email"</span>
+  <span class="atr">id</span>=<span class="str">"email"</span>
+  <span class="atr">name</span>=<span class="str">"email"</span>
+  <span class="atr">placeholder</span>=<span class="str">"example@company.com"</span>
+  <span class="atr">required</span>
+  <span class="atr">autocomplete</span>=<span class="str">"email"</span>
+<span class="tag">&gt;</span>
+
+<span class="cm">&lt;!-- 숫자 범위 제한 --&gt;</span>
+<span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="str">"number"</span> <span class="atr">min</span>=<span class="str">"0"</span> <span class="atr">max</span>=<span class="str">"100"</span> <span class="atr">step</span>=<span class="str">"1"</span> <span class="atr">value</span>=<span class="str">"0"</span><span class="tag">&gt;</span>
+
+<span class="cm">&lt;!-- 체크박스 --&gt;</span>
+<span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="str">"checkbox"</span> <span class="atr">id</span>=<span class="str">"agree"</span> <span class="atr">name</span>=<span class="str">"agree"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;label</span> <span class="atr">for</span>=<span class="str">"agree"</span><span class="tag">&gt;</span>이용약관 동의<span class="tag">&lt;/label&gt;</span></pre>
+      </div>
+
+      <div class="code-block-wrapper">
+        <div class="code-block-label">자주 쓰는 type 값</div>
+        <pre class="code-block">
+<span class="str">"text"</span>     → 기본 텍스트
+<span class="str">"email"</span>    → 이메일 형식 검증 자동
+<span class="str">"password"</span> → 입력값 숨김
+<span class="str">"number"</span>   → 숫자만 (min/max/step 가능)
+<span class="str">"date"</span>     → 날짜 선택 UI
+<span class="str">"search"</span>   → 검색 (X 버튼 자동)
+<span class="str">"checkbox"</span> → 다중 선택
+<span class="str">"radio"</span>    → 단일 선택 (같은 name 그룹)
+<span class="str">"file"</span>     → 파일 업로드
+<span class="str">"hidden"</span>   → 숨김 값 전송 (UI 없음)</pre>
+      </div>
+    </section>
+
+    <!-- 라이브 데모 -->
+    <section class="entry-section" id="demo" data-toc="라이브 데모">
+      <h2 class="section-title"><span class="section-icon icon-demo">▶</span>라이브 데모</h2>
+      <div class="demo-container">
+        <div class="demo-toolbar">
+          <div class="demo-toolbar-dots">
+            <span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span>
+          </div>
+          <span class="demo-toolbar-title">input 상태별 스타일 패턴</span>
+        </div>
+        <div class="demo-preview">
+
+          <div class="form-group">
+            <label class="form-label" for="demo-default">기본 (Default)</label>
+            <input class="form-input" type="text" id="demo-default" placeholder="입력하세요">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="demo-error">에러 상태</label>
+            <input class="form-input error" type="email" id="demo-error" value="잘못된형식" aria-describedby="error-msg">
+            <span class="form-hint error-msg" id="error-msg">⚠ 올바른 이메일 형식이 아닙니다</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="demo-success">성공 상태</label>
+            <input class="form-input success" type="text" id="demo-success" value="확인된 값">
+            <span class="form-hint" style="color:var(--accent-green)">✓ 사용 가능한 아이디입니다</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="demo-disabled">비활성</label>
+            <input class="form-input" type="text" id="demo-disabled" value="편집 불가" disabled>
+          </div>
+
+          <div class="form-divider"></div>
+
+          <p class="form-label" style="margin-bottom:var(--space-3)">자주 쓰는 type 미리보기</p>
+          <div class="type-grid">
+            <div class="type-item">
+              <div class="type-name">type="date"</div>
+              <input class="form-input" type="date" style="max-width:100%">
+            </div>
+            <div class="type-item">
+              <div class="type-name">type="number"</div>
+              <input class="form-input" type="number" min="0" max="100" value="42" style="max-width:100%">
+            </div>
+            <div class="type-item">
+              <div class="type-name">type="range"</div>
+              <input type="range" min="0" max="100" value="60" style="width:100%;accent-color:var(--accent-blue)">
+            </div>
+            <div class="type-item">
+              <div class="type-name">type="checkbox"</div>
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <label style="display:flex;align-items:center;gap:8px;font-size:var(--text-sm);color:var(--text-primary);cursor:pointer">
+                  <input type="checkbox" checked style="accent-color:var(--accent-blue);width:16px;height:16px"> 옵션 A
+                </label>
+                <label style="display:flex;align-items:center;gap:8px;font-size:var(--text-sm);color:var(--text-primary);cursor:pointer">
+                  <input type="checkbox" style="accent-color:var(--accent-blue);width:16px;height:16px"> 옵션 B
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 자주 하는 실수 -->
+    <section class="entry-section" id="mistakes" data-toc="자주 하는 실수">
+      <h2 class="section-title"><span class="section-icon icon-mistake">✕</span>자주 하는 실수</h2>
+      <div class="mistake-list">
+        <div class="mistake-item">
+          <div class="mistake-bad">
+            <div class="mistake-label label-bad">✕ label 없이 placeholder만</div>
+            <pre class="code-block" style="background:transparent;border:none;padding:var(--space-2) 0;font-size:var(--text-sm);">
+<span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="str">"text"</span> <span class="atr">placeholder</span>=<span class="str">"이름 입력"</span><span class="tag">&gt;</span></pre>
+          </div>
+          <div class="mistake-good">
+            <div class="mistake-label label-good">✓ label로 연결</div>
+            <pre class="code-block" style="background:transparent;border:none;padding:var(--space-2) 0;font-size:var(--text-sm);">
+<span class="tag">&lt;label</span> <span class="atr">for</span>=<span class="str">"name"</span><span class="tag">&gt;</span>이름<span class="tag">&lt;/label&gt;</span>
+<span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="str">"text"</span> <span class="atr">id</span>=<span class="str">"name"</span> <span class="atr">placeholder</span>=<span class="str">"홍길동"</span><span class="tag">&gt;</span></pre>
+            <div class="mistake-explanation">
+              ⚠️ placeholder는 입력 시 사라진다. 스크린리더는 placeholder를 label로 인식하지 않는다. for-id 연결로 클릭 영역도 넓어진다.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 연관 항목 -->
+    <section class="entry-section" id="related" data-toc="연관 항목">
+      <h2 class="section-title"><span class="section-icon icon-related">↗</span>연관 항목</h2>
+      <div class="related-grid">
+        <a href="../01_semantic/button.html" class="related-card">
+          <div class="related-card-name">&lt;button&gt;</div>
+          <div class="related-card-desc">폼 제출 버튼</div>
+        </a>
+        <a href="#" class="related-card">
+          <div class="related-card-name">&lt;select&gt;</div>
+          <div class="related-card-desc">드롭다운 선택</div>
+        </a>
+        <a href="#" class="related-card">
+          <div class="related-card-name">&lt;textarea&gt;</div>
+          <div class="related-card-desc">멀티라인 텍스트</div>
+        </a>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script src="../../00_assets/js/navigation.js"></script>
+</body>
+</html>

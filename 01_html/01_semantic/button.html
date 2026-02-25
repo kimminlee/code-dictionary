@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DICT | &lt;button&gt;</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../00_assets/css/variables.css">
+  <link rel="stylesheet" href="../../00_assets/css/reset.css">
+  <link rel="stylesheet" href="../../00_assets/css/entry.css">
+  <style>
+    /* 이 페이지 전용 데모 스타일 */
+    .demo-btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+      align-items: center;
+      margin-bottom: var(--space-5);
+    }
+    .demo-btn-label {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--text-muted);
+      margin-bottom: var(--space-2);
+    }
+    /* 데모 버튼들 */
+    .btn-primary {
+      padding: 10px 20px;
+      background: var(--accent-blue);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-medium);
+      cursor: pointer;
+      transition: opacity var(--transition-fast), transform var(--transition-fast);
+    }
+    .btn-primary:hover   { opacity: 0.85; }
+    .btn-primary:active  { transform: scale(0.97); }
+
+    .btn-secondary {
+      padding: 10px 20px;
+      background: transparent;
+      color: var(--accent-blue);
+      border: 1px solid var(--accent-blue);
+      border-radius: var(--radius-sm);
+      font-size: var(--text-sm);
+      cursor: pointer;
+      transition: background var(--transition-fast);
+    }
+    .btn-secondary:hover { background: rgba(88,166,255,0.1); }
+
+    .btn-ghost {
+      padding: 10px 20px;
+      background: transparent;
+      color: var(--text-secondary);
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: var(--text-sm);
+      cursor: pointer;
+      transition: background var(--transition-fast);
+    }
+    .btn-ghost:hover { background: var(--bg-hover); color: var(--text-primary); }
+
+    .btn-danger {
+      padding: 10px 20px;
+      background: var(--accent-red);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: var(--text-sm);
+      cursor: pointer;
+      transition: opacity var(--transition-fast);
+    }
+    .btn-danger:hover { opacity: 0.85; }
+
+    .btn-disabled {
+      padding: 10px 20px;
+      background: var(--bg-elevated);
+      color: var(--text-muted);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-sm);
+      font-size: var(--text-sm);
+      cursor: not-allowed;
+    }
+
+    .btn-icon {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: 10px 16px;
+      background: var(--bg-elevated);
+      color: var(--text-primary);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-sm);
+      font-size: var(--text-sm);
+      cursor: pointer;
+      transition: border-color var(--transition-fast);
+    }
+    .btn-icon:hover { border-color: var(--accent-blue); }
+
+    .demo-divider {
+      width: 100%;
+      height: 1px;
+      background: var(--border-default);
+      margin: var(--space-5) 0;
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-wrapper">
+  <aside class="sidebar" id="sidebar"></aside>
+
+  <main class="main-content">
+
+    <nav class="breadcrumb" aria-label="breadcrumb">
+      <a href="#">HTML</a>
+      <span>/</span>
+      <a href="#">Semantic</a>
+      <span>/</span>
+      <span style="color: var(--text-primary)">&lt;button&gt;</span>
+    </nav>
+
+    <!-- ── SECTION 1: 헤더 ── -->
+    <header class="entry-header">
+      <div class="entry-category-tag"
+           style="background: rgba(227,76,38,0.12); color: var(--cat-html);">
+        ● HTML / Semantic
+      </div>
+      <h1 class="entry-title">&lt;button&gt;</h1>
+      <p class="entry-definition">
+        사용자 동작을 트리거하는 클릭 가능한 요소
+      </p>
+    </header>
+
+    <!-- ── SECTION 2: 언제 쓰는가 ── -->
+    <section class="entry-section" id="when" data-toc="언제 쓰는가">
+      <h2 class="section-title">
+        <span class="section-icon icon-when">✦</span>
+        언제 쓰는가
+      </h2>
+
+      <div class="when-list">
+        <div class="when-item">
+          <span class="when-item-icon">🖱️</span>
+          <div class="when-item-text">
+            <strong>클릭으로 JS 동작을 실행할 때</strong>
+            <p>모달 열기, 데이터 제출, 필터 적용 등 JavaScript 이벤트를 연결해야 하는 모든 상황. <code style="font-family:var(--font-mono); font-size:0.8em; color:var(--accent-purple)">&lt;div onclick&gt;</code> 대신 반드시 <code style="font-family:var(--font-mono); font-size:0.8em; color:var(--accent-purple)">&lt;button&gt;</code> 을 써야 키보드 접근성이 자동으로 보장된다.</p>
+          </div>
+        </div>
+
+        <div class="when-item">
+          <span class="when-item-icon">📋</span>
+          <div class="when-item-text">
+            <strong>폼 내부에서 제출/초기화할 때</strong>
+            <p><code style="font-family:var(--font-mono); font-size:0.8em; color:var(--accent-purple)">type="submit"</code> 은 폼 전송, <code style="font-family:var(--font-mono); font-size:0.8em; color:var(--accent-purple)">type="reset"</code> 은 폼 초기화. type 미지정 시 form 안에선 기본값이 submit 이다 — 이걸 모르면 예상치 못한 폼 전송이 발생한다.</p>
+          </div>
+        </div>
+
+        <div class="when-item">
+          <span class="when-item-icon">🔗</span>
+          <div class="when-item-text">
+            <strong>페이지 이동이 아닌 액션에서 (링크와 구분)</strong>
+            <p>페이지 이동 → <code style="font-family:var(--font-mono); font-size:0.8em; color:var(--accent-purple)">&lt;a href&gt;</code>, 동작 실행 → <code style="font-family:var(--font-mono); font-size:0.8em; color:var(--accent-purple)">&lt;button&gt;</code>. 이 구분이 시맨틱 마크업의 핵심이며 스크린리더와 검색엔진이 다르게 처리한다.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SECTION 3: 기본 문법 ── -->
+    <section class="entry-section" id="syntax" data-toc="기본 문법">
+      <h2 class="section-title">
+        <span class="section-icon icon-syntax">&lt;/&gt;</span>
+        기본 문법
+      </h2>
+
+      <div class="code-block-wrapper">
+        <div class="code-block-label">html</div>
+        <pre class="code-block">
+<span class="cm">&lt;!-- type 명시가 기본 (기본값은 submit — 폼 밖에선 button) --&gt;</span>
+<span class="tag">&lt;button</span> <span class="atr">type</span>=<span class="str">"button"</span> <span class="atr">onclick</span>=<span class="str">"handleClick()"</span><span class="tag">&gt;</span>클릭<span class="tag">&lt;/button&gt;</span>
+
+<span class="cm">&lt;!-- 폼 제출 --&gt;</span>
+<span class="tag">&lt;button</span> <span class="atr">type</span>=<span class="str">"submit"</span><span class="tag">&gt;</span>제출<span class="tag">&lt;/button&gt;</span>
+
+<span class="cm">&lt;!-- 비활성 --&gt;</span>
+<span class="tag">&lt;button</span> <span class="atr">type</span>=<span class="str">"button"</span> <span class="atr">disabled</span><span class="tag">&gt;</span>비활성<span class="tag">&lt;/button&gt;</span>
+
+<span class="cm">&lt;!-- 아이콘 포함 (aria-label로 접근성 보장) --&gt;</span>
+<span class="tag">&lt;button</span> <span class="atr">type</span>=<span class="str">"button"</span> <span class="atr">aria-label</span>=<span class="str">"항목 삭제"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;svg</span> <span class="atr">aria-hidden</span>=<span class="str">"true"</span><span class="tag">&gt;</span>...<span class="tag">&lt;/svg&gt;</span>
+<span class="tag">&lt;/button&gt;</span></pre>
+      </div>
+
+      <div class="code-block-wrapper">
+        <div class="code-block-label">type 속성 정리</div>
+        <pre class="code-block">
+<span class="cm">/* type 값과 동작 */</span>
+<span class="str">"button"</span>  → JS 이벤트만 실행 (폼 전송 없음) ← <span class="val">가장 많이 쓴다</span>
+<span class="str">"submit"</span>  → 소속된 &lt;form&gt; 전송
+<span class="str">"reset"</span>   → 소속된 &lt;form&gt; 초기화</pre>
+      </div>
+    </section>
+
+    <!-- ── SECTION 4: 라이브 데모 ── -->
+    <section class="entry-section" id="demo" data-toc="라이브 데모">
+      <h2 class="section-title">
+        <span class="section-icon icon-demo">▶</span>
+        라이브 데모
+      </h2>
+
+      <div class="demo-container">
+        <div class="demo-toolbar">
+          <div class="demo-toolbar-dots">
+            <span class="dot-red"></span>
+            <span class="dot-yellow"></span>
+            <span class="dot-green"></span>
+          </div>
+          <span class="demo-toolbar-title">button variants — 실무에서 쓰는 패턴</span>
+        </div>
+        <div class="demo-preview">
+
+          <div class="demo-btn-label">Primary / Secondary / Ghost</div>
+          <div class="demo-btn-row">
+            <button type="button" class="btn-primary">저장하기</button>
+            <button type="button" class="btn-secondary">취소</button>
+            <button type="button" class="btn-ghost">더 보기</button>
+          </div>
+
+          <div class="demo-divider"></div>
+
+          <div class="demo-btn-label">Danger / Disabled</div>
+          <div class="demo-btn-row">
+            <button type="button" class="btn-danger">삭제</button>
+            <button type="button" class="btn-disabled" disabled>처리 중...</button>
+          </div>
+
+          <div class="demo-divider"></div>
+
+          <div class="demo-btn-label">Icon + Text (대시보드 액션 버튼)</div>
+          <div class="demo-btn-row">
+            <button type="button" class="btn-icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 5v14M5 12l7-7 7 7"/>
+              </svg>
+              업로드
+            </button>
+            <button type="button" class="btn-icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+              </svg>
+              검색
+            </button>
+            <button type="button" class="btn-icon" aria-label="필터 열기">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+              </svg>
+              필터
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SECTION 5: 자주 하는 실수 ── -->
+    <section class="entry-section" id="mistakes" data-toc="자주 하는 실수">
+      <h2 class="section-title">
+        <span class="section-icon icon-mistake">✕</span>
+        자주 하는 실수
+      </h2>
+
+      <div class="mistake-list">
+
+        <div class="mistake-item">
+          <div class="mistake-bad">
+            <div class="mistake-label label-bad">✕ &lt;div&gt;로 버튼 만들기</div>
+            <pre class="code-block" style="background:transparent;border:none;padding:var(--space-2) 0;font-size:var(--text-sm);">
+<span class="tag">&lt;div</span> <span class="atr">class</span>=<span class="str">"btn"</span> <span class="atr">onclick</span>=<span class="str">"submit()"</span><span class="tag">&gt;</span>제출<span class="tag">&lt;/div&gt;</span></pre>
+          </div>
+          <div class="mistake-good">
+            <div class="mistake-label label-good">✓ &lt;button&gt; 사용</div>
+            <pre class="code-block" style="background:transparent;border:none;padding:var(--space-2) 0;font-size:var(--text-sm);">
+<span class="tag">&lt;button</span> <span class="atr">type</span>=<span class="str">"button"</span> <span class="atr">onclick</span>=<span class="str">"submit()"</span><span class="tag">&gt;</span>제출<span class="tag">&lt;/button&gt;</span></pre>
+            <div class="mistake-explanation">
+              ⚠️ &lt;div&gt;는 기본적으로 키보드 포커스가 안 된다. &lt;button&gt;은 Enter/Space 키 동작, Tab 포커스, 스크린리더 읽기가 모두 자동으로 지원된다. 접근성 + SEO 동시 해결.
+            </div>
+          </div>
+        </div>
+
+        <div class="mistake-item">
+          <div class="mistake-bad">
+            <div class="mistake-label label-bad">✕ form 밖에서 type 미지정</div>
+            <pre class="code-block" style="background:transparent;border:none;padding:var(--space-2) 0;font-size:var(--text-sm);">
+<span class="tag">&lt;form&gt;</span>
+  <span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="str">"text"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;button&gt;</span>검색<span class="tag">&lt;/button&gt;</span>  <span class="cm">&lt;!-- type 없음! --&gt;</span>
+<span class="tag">&lt;/form&gt;</span></pre>
+          </div>
+          <div class="mistake-good">
+            <div class="mistake-label label-good">✓ type 명시</div>
+            <pre class="code-block" style="background:transparent;border:none;padding:var(--space-2) 0;font-size:var(--text-sm);">
+<span class="tag">&lt;form&gt;</span>
+  <span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="str">"text"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;button</span> <span class="atr">type</span>=<span class="str">"button"</span><span class="tag">&gt;</span>검색<span class="tag">&lt;/button&gt;</span>  <span class="cm">&lt;!-- 의도한 동작 --&gt;</span>
+<span class="tag">&lt;/form&gt;</span></pre>
+            <div class="mistake-explanation">
+              ⚠️ &lt;form&gt; 안에서 type 미지정 button의 기본값은 "submit". 클릭 시 페이지가 새로고침되거나 예상치 못한 폼 전송이 일어난다. type은 항상 명시해라.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── SECTION 6: 연관 항목 ── -->
+    <section class="entry-section" id="related" data-toc="연관 항목">
+      <h2 class="section-title">
+        <span class="section-icon icon-related">↗</span>
+        연관 항목
+      </h2>
+
+      <div class="related-grid">
+        <a href="../02_forms/input.html" class="related-card">
+          <div class="related-card-name">&lt;input&gt;</div>
+          <div class="related-card-desc">폼 입력 요소</div>
+        </a>
+        <a href="../03_accessibility/aria-label.html" class="related-card">
+          <div class="related-card-name">aria-label</div>
+          <div class="related-card-desc">접근성 이름 부여</div>
+        </a>
+        <a href="#" class="related-card">
+          <div class="related-card-name">&lt;a&gt;</div>
+          <div class="related-card-desc">링크 (이동 vs 동작 구분)</div>
+        </a>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script src="../../00_assets/js/navigation.js"></script>
+</body>
+</html>

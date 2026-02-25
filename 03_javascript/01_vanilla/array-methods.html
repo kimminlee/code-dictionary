@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DICT | Array Methods</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../00_assets/css/variables.css">
+  <link rel="stylesheet" href="../../00_assets/css/reset.css">
+  <link rel="stylesheet" href="../../00_assets/css/entry.css">
+  <style>
+    .method-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: var(--space-2);
+      margin-bottom: var(--space-6);
+    }
+    .method-chip {
+      padding: var(--space-2) var(--space-3);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--accent-purple);
+      text-align: center;
+      cursor: pointer;
+      transition: border-color var(--transition-fast), background var(--transition-fast);
+    }
+    .method-chip:hover, .method-chip.active {
+      border-color: var(--accent-blue);
+      background: rgba(88,166,255,0.08);
+      color: var(--accent-blue);
+    }
+    .playground {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+    .playground-header {
+      display: flex;
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      background: var(--bg-base);
+      border-bottom: 1px solid var(--border-default);
+    }
+    .playground-tab {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--text-muted);
+      padding: var(--space-1) var(--space-3);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+    }
+    .playground-tab.active { background: var(--bg-elevated); color: var(--text-primary); }
+    .playground-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    @media(max-width:600px) { .playground-body { grid-template-columns: 1fr; } }
+    .pg-input, .pg-output {
+      padding: var(--space-4);
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      min-height: 120px;
+    }
+    .pg-input {
+      background: transparent;
+      border-right: 1px solid var(--border-default);
+      color: var(--text-primary);
+      resize: none;
+      outline: none;
+      border-bottom: none;
+      border-top: none;
+      border-left: none;
+      width: 100%;
+    }
+    .pg-output { color: var(--accent-green); }
+    .pg-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-muted);
+      padding: var(--space-2) var(--space-4);
+      border-top: 1px solid var(--border-default);
+      background: var(--bg-base);
+    }
+    .run-btn {
+      padding: var(--space-1) var(--space-3);
+      background: var(--accent-blue);
+      color: #fff;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      cursor: pointer;
+      margin-left: auto;
+      border: none;
+    }
+    .run-btn:hover { opacity: 0.85; }
+  </style>
+</head>
+<body>
+
+<div class="page-wrapper">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main-content">
+
+    <nav class="breadcrumb">
+      <a href="#">JavaScript</a><span>/</span>
+      <a href="#">Vanilla</a><span>/</span>
+      <span style="color:var(--text-primary)">Array Methods</span>
+    </nav>
+
+    <header class="entry-header">
+      <div class="entry-category-tag" style="background:rgba(247,223,30,0.1);color:var(--cat-js);">
+        ● JavaScript / Vanilla
+      </div>
+      <h1 class="entry-title">Array Methods</h1>
+      <p class="entry-definition">배열 데이터를 변환·필터·집계하는 ES6+ 핵심 메서드</p>
+    </header>
+
+    <section class="entry-section" id="when" data-toc="언제 쓰는가">
+      <h2 class="section-title"><span class="section-icon icon-when">✦</span>언제 쓰는가</h2>
+      <div class="when-list">
+        <div class="when-item">
+          <span class="when-item-icon">📊</span>
+          <div class="when-item-text">
+            <strong>API 데이터를 테이블/차트용으로 변환</strong>
+            <p>서버에서 받은 배열 데이터를 화면에 보여줄 형태로 가공. <code style="font-family:var(--font-mono);font-size:0.8em;color:var(--accent-purple)">.map()</code>으로 속성 추출, <code style="font-family:var(--font-mono);font-size:0.8em;color:var(--accent-purple)">.filter()</code>로 조건 필터링, <code style="font-family:var(--font-mono);font-size:0.8em;color:var(--accent-purple)">.sort()</code>로 정렬. 대시보드 데이터 처리의 90%가 이 세 가지다.</p>
+          </div>
+        </div>
+        <div class="when-item">
+          <span class="when-item-icon">🧮</span>
+          <div class="when-item-text">
+            <strong>합계/평균 등 집계</strong>
+            <p><code style="font-family:var(--font-mono);font-size:0.8em;color:var(--accent-purple)">.reduce()</code>로 총합, 평균, 그룹핑. 매출 합산, 카테고리별 집계에 사용. for 루프보다 의도가 명확하고 React state와 잘 맞는다.</p>
+          </div>
+        </div>
+        <div class="when-item">
+          <span class="when-item-icon">🔍</span>
+          <div class="when-item-text">
+            <strong>검색/자동완성 구현</strong>
+            <p>입력값으로 목록을 필터링. <code style="font-family:var(--font-mono);font-size:0.8em;color:var(--accent-purple)">.filter() + .includes()</code> 또는 <code style="font-family:var(--font-mono);font-size:0.8em;color:var(--accent-purple)">.find()</code>. 서버 요청 없이 프론트엔드에서 실시간 필터링할 때.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry-section" id="syntax" data-toc="기본 문법">
+      <h2 class="section-title"><span class="section-icon icon-syntax">&lt;/&gt;</span>기본 문법</h2>
+      <div class="code-block-wrapper">
+        <div class="code-block-label">js — 실무 패턴 모음</div>
+        <pre class="code-block">
+<span class="kw">const</span> orders = [
+  { id: <span class="val">1</span>, user: <span class="str">'김철수'</span>, amount: <span class="val">45000</span>, status: <span class="str">'완료'</span> },
+  { id: <span class="val">2</span>, user: <span class="str">'이영희'</span>, amount: <span class="val">12000</span>, status: <span class="str">'취소'</span> },
+  { id: <span class="val">3</span>, user: <span class="str">'박지민'</span>, amount: <span class="val">88000</span>, status: <span class="str">'완료'</span> },
+];
+
+<span class="cm">// ① map — 데이터 변환 (원본 불변)</span>
+<span class="kw">const</span> userNames = orders.<span class="atr">map</span>(o =&gt; o.user);
+<span class="cm">// → ['김철수', '이영희', '박지민']</span>
+
+<span class="cm">// ② filter — 조건 필터링</span>
+<span class="kw">const</span> completed = orders.<span class="atr">filter</span>(o =&gt; o.status === <span class="str">'완료'</span>);
+<span class="cm">// → [{ id:1, ...}, { id:3, ...}]</span>
+
+<span class="cm">// ③ reduce — 집계</span>
+<span class="kw">const</span> total = orders.<span class="atr">reduce</span>((sum, o) =&gt; sum + o.amount, <span class="val">0</span>);
+<span class="cm">// → 145000</span>
+
+<span class="cm">// ④ find — 단일 항목 검색</span>
+<span class="kw">const</span> order = orders.<span class="atr">find</span>(o =&gt; o.id === <span class="val">2</span>);
+<span class="cm">// → { id:2, user:'이영희', ... }</span>
+
+<span class="cm">// ⑤ sort — 정렬 (원본 변경 주의!)</span>
+<span class="kw">const</span> sorted = [...orders].<span class="atr">sort</span>((a, b) =&gt; b.amount - a.amount);
+<span class="cm">// → 금액 내림차순</span>
+
+<span class="cm">// ⑥ 메서드 체이닝 — 실무 핵심 패턴</span>
+<span class="kw">const</span> result = orders
+  .<span class="atr">filter</span>(o =&gt; o.status === <span class="str">'완료'</span>)   <span class="cm">// 완료만</span>
+  .<span class="atr">map</span>(o =&gt; ({ ...o, vat: o.amount * <span class="val">0.1</span> })) <span class="cm">// VAT 추가</span>
+  .<span class="atr">sort</span>((a, b) =&gt; b.amount - a.amount); <span class="cm">// 금액 정렬</span></pre>
+      </div>
+    </section>
+
+    <section class="entry-section" id="demo" data-toc="라이브 데모">
+      <h2 class="section-title"><span class="section-icon icon-demo">▶</span>라이브 데모</h2>
+      <div class="demo-container">
+        <div class="demo-toolbar">
+          <div class="demo-toolbar-dots">
+            <span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span>
+          </div>
+          <span class="demo-toolbar-title">직접 코드 수정 후 실행</span>
+        </div>
+        <div class="demo-preview" style="padding:0">
+          <div class="playground-header">
+            <span class="playground-tab active">코드</span>
+            <button type="button" class="run-btn" id="run-btn">▶ 실행</button>
+          </div>
+          <div class="playground-body">
+            <textarea class="pg-input" id="pg-code" spellcheck="false">const data = [
+  { name: '영업부', sales: 450 },
+  { name: '마케팅', sales: 220 },
+  { name: '개발팀', sales: 890 },
+  { name: '기획팀', sales: 130 },
+];
+
+// 여기를 수정해봐라
+const result = data
+  .filter(d => d.sales > 200)
+  .map(d => `${d.name}: ${d.sales}만원`)
+  .join('\n');
+
+result;</textarea>
+            <div class="pg-output" id="pg-output">결과가 여기에 표시됩니다</div>
+          </div>
+          <div style="display:flex">
+            <div class="pg-label" style="flex:1;border-right:1px solid var(--border-default)">← 코드 수정 후 실행</div>
+            <div class="pg-label" style="flex:1">→ 출력 결과</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry-section" id="mistakes" data-toc="자주 하는 실수">
+      <h2 class="section-title"><span class="section-icon icon-mistake">✕</span>자주 하는 실수</h2>
+      <div class="mistake-list">
+        <div class="mistake-item">
+          <div class="mistake-bad">
+            <div class="mistake-label label-bad">✕ sort로 원본 배열 변경</div>
+            <pre class="code-block" style="background:transparent;border:none;padding:var(--space-2) 0;font-size:var(--text-sm);">
+<span class="cm">// state 배열을 직접 sort — React에서 리렌더 안 됨</span>
+<span class="kw">const</span> sorted = orders.<span class="atr">sort</span>((a,b) =&gt; a.amount - b.amount);</pre>
+          </div>
+          <div class="mistake-good">
+            <div class="mistake-label label-good">✓ 스프레드로 복사 후 sort</div>
+            <pre class="code-block" style="background:transparent;border:none;padding:var(--space-2) 0;font-size:var(--text-sm);">
+<span class="cm">// 원본 유지 → React state에 안전</span>
+<span class="kw">const</span> sorted = [...orders].<span class="atr">sort</span>((a,b) =&gt; a.amount - b.amount);</pre>
+            <div class="mistake-explanation">
+              ⚠️ .sort()는 원본 배열을 직접 변경(mutate)한다. React에서 state 배열을 직접 수정하면 참조가 같아 리렌더가 발생하지 않는다. 항상 복사본을 만들어라.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry-section" id="related" data-toc="연관 항목">
+      <h2 class="section-title"><span class="section-icon icon-related">↗</span>연관 항목</h2>
+      <div class="related-grid">
+        <a href="../02_async/fetch.html" class="related-card">
+          <div class="related-card-name">fetch / async</div>
+          <div class="related-card-desc">API 데이터 가져오기</div>
+        </a>
+        <a href="#" class="related-card">
+          <div class="related-card-name">Object.entries</div>
+          <div class="related-card-desc">객체 순회</div>
+        </a>
+        <a href="../03_react/useState.html" class="related-card">
+          <div class="related-card-name">useState</div>
+          <div class="related-card-desc">배열 state 관리</div>
+        </a>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script src="../../00_assets/js/navigation.js"></script>
+<script>
+  const runBtn = document.getElementById('run-btn');
+  const codeEl = document.getElementById('pg-code');
+  const outEl  = document.getElementById('pg-output');
+
+  if (runBtn && codeEl && outEl) {
+    // 페이지 로드 시 자동 실행
+    function runCode() {
+      try {
+        // eval 대신 Function 생성자로 실행 (전역 오염 방지)
+        const fn = new Function(codeEl.value);
+        const result = fn();
+        outEl.textContent = result !== undefined
+          ? (typeof result === 'object' ? JSON.stringify(result, null, 2) : String(result))
+          : '(반환값 없음)';
+        outEl.style.color = 'var(--accent-green)';
+      } catch (e) {
+        outEl.textContent = '❌ ' + e.message;
+        outEl.style.color = 'var(--accent-red)';
+      }
+    }
+    runBtn.addEventListener('click', runCode);
+    runCode(); // 초기 실행
+  }
+</script>
+</body>
+</html>

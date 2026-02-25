@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DICT | box-model</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../00_assets/css/variables.css">
+  <link rel="stylesheet" href="../../00_assets/css/reset.css">
+  <link rel="stylesheet" href="../../00_assets/css/entry.css">
+  <style>
+    /* 박스모델 다이어그램 */
+    .box-diagram {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 28px;
+      background: rgba(210,153,34,0.08);
+      border: 2px dashed var(--accent-yellow);
+      border-radius: var(--radius-md);
+      position: relative;
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+    }
+    .box-margin-label {
+      position: absolute;
+      top: 6px; left: 10px;
+      color: var(--accent-yellow);
+      font-size: 10px;
+    }
+    .box-border {
+      padding: 20px;
+      background: rgba(88,166,255,0.06);
+      border: 2px solid var(--accent-blue);
+      border-radius: var(--radius-sm);
+      position: relative;
+    }
+    .box-border-label {
+      position: absolute;
+      top: 4px; left: 8px;
+      color: var(--accent-blue);
+      font-size: 10px;
+    }
+    .box-padding {
+      padding: 20px;
+      background: rgba(63,185,80,0.08);
+      border: 1px dashed var(--accent-green);
+      border-radius: 2px;
+      position: relative;
+    }
+    .box-padding-label {
+      position: absolute;
+      top: 4px; left: 8px;
+      color: var(--accent-green);
+      font-size: 10px;
+    }
+    .box-content {
+      width: 120px;
+      height: 60px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-strong);
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-primary);
+      font-size: 11px;
+    }
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-4);
+    }
+    @media(max-width:520px) { .compare-grid { grid-template-columns: 1fr; } }
+    .compare-card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      padding: var(--space-5);
+    }
+    .compare-title {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      font-weight: var(--weight-bold);
+      margin-bottom: var(--space-3);
+    }
+    .demo-box {
+      background: rgba(88,166,255,0.15);
+      border: 2px solid var(--accent-blue);
+      font-size: var(--text-xs);
+      font-family: var(--font-mono);
+      color: var(--text-secondary);
+      text-align: center;
+      padding: 16px;
+      margin-bottom: var(--space-2);
+    }
+    .demo-box.content-box {
+      box-sizing: content-box;
+      width: 140px;
+    }
+    .demo-box.border-box {
+      box-sizing: border-box;
+      width: 140px;
+    }
+    .size-note {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-wrapper">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main-content">
+
+    <nav class="breadcrumb">
+      <a href="#">CSS</a><span>/</span>
+      <a href="#">Core</a><span>/</span>
+      <span style="color:var(--text-primary)">box-model</span>
+    </nav>
+
+    <header class="entry-header">
+      <div class="entry-category-tag" style="background:rgba(38,77,228,0.12);color:var(--cat-css);">
+        ● CSS / Core
+      </div>
+      <h1 class="entry-title">box-model</h1>
+      <p class="entry-definition">모든 HTML 요소가 갖는 4겹 구조 — content / padding / border / margin</p>
+    </header>
+
+    <section class="entry-section" id="when" data-toc="언제 쓰는가">
+      <h2 class="section-title"><span class="section-icon icon-when">✦</span>언제 쓰는가</h2>
+      <div class="when-list">
+        <div class="when-item">
+          <span class="when-item-icon">📐</span>
+          <div class="when-item-text">
+            <strong>요소 크기가 생각과 다를 때 디버깅</strong>
+            <p>width: 200px 으로 지정했는데 실제 렌더 크기가 다르다면 box-sizing 문제다. 크롬 DevTools → Elements → Computed 탭에서 박스모델을 시각적으로 확인한다.</p>
+          </div>
+        </div>
+        <div class="when-item">
+          <span class="when-item-icon">🃏</span>
+          <div class="when-item-text">
+            <strong>카드/버튼 내부 여백 설정</strong>
+            <p>클릭 영역을 넓히려면 margin이 아닌 padding. 카드 간격은 padding이 아닌 margin 또는 gap. 이 구분이 레이아웃 설계의 기본.</p>
+          </div>
+        </div>
+        <div class="when-item">
+          <span class="when-item-icon">📏</span>
+          <div class="when-item-text">
+            <strong>box-sizing: border-box 전역 적용</strong>
+            <p>width를 지정하면 padding, border를 포함한 크기가 되도록 설정. 실무 프로젝트 reset.css 1번 줄에 들어가는 내용이다.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry-section" id="syntax" data-toc="기본 문법">
+      <h2 class="section-title"><span class="section-icon icon-syntax">&lt;/&gt;</span>기본 문법</h2>
+      <div class="code-block-wrapper">
+        <div class="code-block-label">css</div>
+        <pre class="code-block">
+<span class="cm">/* ── 박스모델 4겹 ── */</span>
+<span class="sel">.box</span> {
+  <span class="prp">width</span>:   <span class="val">200px</span>;      <span class="cm">/* content 영역 너비 */</span>
+  <span class="prp">padding</span>: <span class="val">16px</span>;      <span class="cm">/* 내부 여백 (배경색 포함) */</span>
+  <span class="prp">border</span>:  <span class="val">1px solid #ccc</span>; <span class="cm">/* 테두리 */</span>
+  <span class="prp">margin</span>:  <span class="val">24px</span>;      <span class="cm">/* 외부 여백 (투명) */</span>
+}
+
+<span class="cm">/* ── box-sizing: 실무 필수 전역 설정 ── */</span>
+<span class="sel">*, *::before, *::after</span> {
+  <span class="prp">box-sizing</span>: <span class="val">border-box</span>; <span class="cm">/* width에 padding+border 포함 */</span>
+}
+
+<span class="cm">/* ── 단축 속성 ── */</span>
+<span class="prp">padding</span>: <span class="val">10px 20px</span>;         <span class="cm">/* 상하10 좌우20 */</span>
+<span class="prp">padding</span>: <span class="val">10px 20px 15px 5px</span>; <span class="cm">/* 상 우 하 좌 (시계방향) */</span>
+<span class="prp">margin</span>:  <span class="val">0 auto</span>;            <span class="cm">/* 수평 중앙 정렬 */</span></pre>
+      </div>
+    </section>
+
+    <section class="entry-section" id="demo" data-toc="라이브 데모">
+      <h2 class="section-title"><span class="section-icon icon-demo">▶</span>라이브 데모</h2>
+      <div class="demo-container">
+        <div class="demo-toolbar">
+          <div class="demo-toolbar-dots">
+            <span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span>
+          </div>
+          <span class="demo-toolbar-title">박스모델 구조 + box-sizing 비교</span>
+        </div>
+        <div class="demo-preview">
+
+          <!-- 박스모델 다이어그램 -->
+          <p style="font-size:var(--text-xs);color:var(--text-muted);margin-bottom:var(--space-4);font-family:var(--font-mono)">박스모델 4겹 구조</p>
+          <div class="box-diagram" style="margin-bottom:var(--space-8)">
+            <span class="box-margin-label">margin</span>
+            <div class="box-border">
+              <span class="box-border-label">border</span>
+              <div class="box-padding">
+                <span class="box-padding-label">padding</span>
+                <div class="box-content">content</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- box-sizing 비교 -->
+          <p style="font-size:var(--text-xs);color:var(--text-muted);margin-bottom:var(--space-4);font-family:var(--font-mono)">box-sizing 비교 — 둘 다 width: 140px, padding: 16px 설정</p>
+          <div class="compare-grid">
+            <div class="compare-card">
+              <div class="compare-title" style="color:var(--accent-red)">content-box (기본값)</div>
+              <div class="demo-box content-box" style="box-sizing:content-box;width:140px;padding:16px">내용</div>
+              <div class="size-note">실제 렌더 너비: 140 + 32(pad) + 4(border) = <span style="color:var(--accent-red)">176px</span></div>
+            </div>
+            <div class="compare-card">
+              <div class="compare-title" style="color:var(--accent-green)">border-box (실무 표준)</div>
+              <div class="demo-box border-box" style="box-sizing:border-box;width:140px;padding:16px">내용</div>
+              <div class="size-note">실제 렌더 너비: padding 포함 <span style="color:var(--accent-green)">140px</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry-section" id="mistakes" data-toc="자주 하는 실수">
+      <h2 class="section-title"><span class="section-icon icon-mistake">✕</span>자주 하는 실수</h2>
+      <div class="mistake-list">
+        <div class="mistake-item">
+          <div class="mistake-bad">
+            <div class="mistake-label label-bad">✕ box-sizing 없이 width 계산</div>
+            <pre class="code-block" style="background:transparent;border:none;padding:var(--space-2) 0;font-size:var(--text-sm);">
+<span class="sel">.card</span> {
+  <span class="prp">width</span>:   <span class="val">300px</span>;
+  <span class="prp">padding</span>: <span class="val">20px</span>;   <span class="cm">/* 실제 너비: 340px — 레이아웃 깨짐 */</span>
+}</pre>
+          </div>
+          <div class="mistake-good">
+            <div class="mistake-label label-good">✓ reset에 border-box 전역 적용</div>
+            <pre class="code-block" style="background:transparent;border:none;padding:var(--space-2) 0;font-size:var(--text-sm);">
+<span class="sel">*, *::before, *::after</span> { <span class="prp">box-sizing</span>: <span class="val">border-box</span>; }
+
+<span class="sel">.card</span> {
+  <span class="prp">width</span>:   <span class="val">300px</span>;  <span class="cm">/* padding 포함 정확히 300px */</span>
+  <span class="prp">padding</span>: <span class="val">20px</span>;
+}</pre>
+            <div class="mistake-explanation">
+              ⚠️ border-box를 전역 적용하면 width가 "겉으로 보이는 크기"와 일치한다. 모든 현대 CSS 리셋의 1번 항목이다.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry-section" id="related" data-toc="연관 항목">
+      <h2 class="section-title"><span class="section-icon icon-related">↗</span>연관 항목</h2>
+      <div class="related-grid">
+        <a href="../02_layout/flexbox.html" class="related-card">
+          <div class="related-card-name">flexbox</div>
+          <div class="related-card-desc">레이아웃 정렬</div>
+        </a>
+        <a href="#" class="related-card">
+          <div class="related-card-name">position</div>
+          <div class="related-card-desc">요소 위치 지정</div>
+        </a>
+        <a href="#" class="related-card">
+          <div class="related-card-name">overflow</div>
+          <div class="related-card-desc">넘치는 내용 처리</div>
+        </a>
+      </div>
+    </section>
+
+  </main>
+</div>
+<script src="../../00_assets/js/navigation.js"></script>
+</body>
+</html>

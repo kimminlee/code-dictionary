@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DICT | fetch / async-await</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../00_assets/css/variables.css">
+  <link rel="stylesheet" href="../../00_assets/css/reset.css">
+  <link rel="stylesheet" href="../../00_assets/css/entry.css">
+  <style>
+    .demo-fetch-btn {
+      padding: 10px 20px;
+      background: var(--accent-blue);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: var(--text-sm);
+      cursor: pointer;
+      font-family: var(--font-sans);
+      transition: opacity var(--transition-fast);
+    }
+    .demo-fetch-btn:hover { opacity: 0.85; }
+    .demo-fetch-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .fetch-result {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-sm);
+      padding: var(--space-4);
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--text-secondary);
+      min-height: 80px;
+      white-space: pre-wrap;
+      word-break: break-all;
+      line-height: 1.7;
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-wrapper">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main-content">
+
+    <nav class="breadcrumb">
+      <a href="#">JavaScript</a><span>/</span>
+      <a href="#">Async</a><span>/</span>
+      <span style="color:var(--text-primary)">fetch / async-await</span>
+    </nav>
+
+    <header class="entry-header">
+      <div class="entry-category-tag" style="background:rgba(247,223,30,0.1);color:var(--cat-js);">
+        ● JavaScript / Async
+      </div>
+      <h1 class="entry-title">fetch / async-await</h1>
+      <p class="entry-definition">서버 API와 비동기로 데이터를 주고받는 표준 방법</p>
+    </header>
+
+    <section class="entry-section" id="when" data-toc="언제 쓰는가">
+      <h2 class="section-title"><span class="section-icon icon-when">✦</span>언제 쓰는가</h2>
+      <div class="when-list">
+        <div class="when-item">
+          <span class="when-item-icon">📡</span>
+          <div class="when-item-text">
+            <strong>REST API 호출 — GET/POST/PUT/DELETE</strong>
+            <p>대시보드 데이터 로딩, 폼 제출, 항목 수정/삭제. 모든 프론트엔드에서 API 통신은 fetch 또는 axios로 처리한다.</p>
+          </div>
+        </div>
+        <div class="when-item">
+          <span class="when-item-icon">⏳</span>
+          <div class="when-item-text">
+            <strong>순차 실행이 필요한 로직</strong>
+            <p>로그인 → 토큰 저장 → 사용자 정보 조회처럼 앞 결과가 뒤에 필요한 경우. async/await 없으면 Promise 체이닝이 중첩되어 읽기 어렵다.</p>
+          </div>
+        </div>
+        <div class="when-item">
+          <span class="when-item-icon">⚡</span>
+          <div class="when-item-text">
+            <strong>여러 API 병렬 호출</strong>
+            <p><code style="font-family:var(--font-mono);font-size:0.8em;color:var(--accent-purple)">Promise.all()</code>로 순서 상관없는 API를 동시에 요청. 순차 호출보다 전체 응답 시간이 단축된다.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry-section" id="syntax" data-toc="기본 문법">
+      <h2 class="section-title"><span class="section-icon icon-syntax">&lt;/&gt;</span>기본 문법</h2>
+      <div class="code-block-wrapper">
+        <div class="code-block-label">js — 실무 필수 패턴</div>
+        <pre class="code-block">
+<span class="cm">// ── 기본 GET ──</span>
+<span class="kw">async function</span> <span class="atr">fetchUsers</span>() {
+  <span class="kw">try</span> {
+    <span class="kw">const</span> res = <span class="kw">await</span> fetch(<span class="str">'/api/users'</span>);
+    <span class="kw">if</span> (!res.ok) <span class="kw">throw new</span> Error(<span class="str">`HTTP ${res.status}`</span>); <span class="cm">// 필수!</span>
+    <span class="kw">return await</span> res.json();
+  } <span class="kw">catch</span> (err) {
+    console.<span class="atr">error</span>(err);
+    <span class="kw">throw</span> err;
+  }
+}
+
+<span class="cm">// ── POST ──</span>
+<span class="kw">async function</span> <span class="atr">createUser</span>(body) {
+  <span class="kw">const</span> res = <span class="kw">await</span> fetch(<span class="str">'/api/users'</span>, {
+    method:  <span class="str">'POST'</span>,
+    headers: { <span class="str">'Content-Type'</span>: <span class="str">'application/json'</span> },
+    body:    JSON.<span class="atr">stringify</span>(body),
+  });
+  <span class="kw">return</span> res.json();
+}
+
+<span class="cm">// ── 병렬 호출 ──</span>
+<span class="kw">const</span> [users, orders] = <span class="kw">await</span> Promise.<span class="atr">all</span>([
+  fetch(<span class="str">'/api/users'</span>).<span class="atr">then</span>(r =&gt; r.json()),
+  fetch(<span class="str">'/api/orders'</span>).<span class="atr">then</span>(r =&gt; r.json()),
+]);</pre>
+      </div>
+    </section>
+
+    <section class="entry-section" id="demo" data-toc="라이브 데모">
+      <h2 class="section-title"><span class="section-icon icon-demo">▶</span>라이브 데모</h2>
+      <div class="demo-container">
+        <div class="demo-toolbar">
+          <div class="demo-toolbar-dots">
+            <span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span>
+          </div>
+          <span class="demo-toolbar-title">실제 공개 API 호출 — JSONPlaceholder</span>
+        </div>
+        <div class="demo-preview">
+          <p style="font-size:var(--text-xs);color:var(--text-muted);margin-bottom:var(--space-4);font-family:var(--font-mono)">
+            jsonplaceholder.typicode.com — 실제 HTTP 요청
+          </p>
+          <div style="display:flex;gap:var(--space-3);margin-bottom:var(--space-4);flex-wrap:wrap">
+            <button type="button" class="demo-fetch-btn" id="fetch-get">▶ GET /users</button>
+            <button type="button" class="demo-fetch-btn" id="fetch-post" style="background:var(--accent-green)">▶ POST (mock)</button>
+            <button type="button" class="demo-fetch-btn" id="fetch-fail" style="background:var(--accent-red)">▶ 에러 케이스</button>
+          </div>
+          <div class="fetch-result" id="fetch-result">버튼을 눌러 실제 API 요청을 실행하세요</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry-section" id="mistakes" data-toc="자주 하는 실수">
+      <h2 class="section-title"><span class="section-icon icon-mistake">✕</span>자주 하는 실수</h2>
+      <div class="mistake-list">
+        <div class="mistake-item">
+          <div class="mistake-bad">
+            <div class="mistake-label label-bad">✕ response.ok 체크 없음</div>
+            <pre class="code-block" style="background:transparent;border:none;padding:var(--space-2) 0;font-size:var(--text-sm);">
+<span class="kw">const</span> res  = <span class="kw">await</span> fetch(<span class="str">'/api/data'</span>);
+<span class="kw">const</span> data = <span class="kw">await</span> res.json();  <span class="cm">// 404여도 에러 안 남</span></pre>
+          </div>
+          <div class="mistake-good">
+            <div class="mistake-label label-good">✓ ok 체크 + try-catch</div>
+            <pre class="code-block" style="background:transparent;border:none;padding:var(--space-2) 0;font-size:var(--text-sm);">
+<span class="kw">try</span> {
+  <span class="kw">const</span> res = <span class="kw">await</span> fetch(<span class="str">'/api/data'</span>);
+  <span class="kw">if</span> (!res.ok) <span class="kw">throw new</span> Error(res.status);
+  <span class="kw">const</span> data = <span class="kw">await</span> res.json();
+} <span class="kw">catch</span> (e) { <span class="cm">/* 처리 */</span> }</pre>
+            <div class="mistake-explanation">
+              ⚠️ fetch는 네트워크 단절만 reject한다. 400, 404, 500은 정상 resolve된다. response.ok를 반드시 체크해야 HTTP 에러를 잡을 수 있다.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry-section" id="related" data-toc="연관 항목">
+      <h2 class="section-title"><span class="section-icon icon-related">↗</span>연관 항목</h2>
+      <div class="related-grid">
+        <a href="#" class="related-card">
+          <div class="related-card-name">Promise</div>
+          <div class="related-card-desc">async/await 기반</div>
+        </a>
+        <a href="../03_react/useState.html" class="related-card">
+          <div class="related-card-name">useState</div>
+          <div class="related-card-desc">fetched data 저장</div>
+        </a>
+        <a href="../01_vanilla/array-methods.html" class="related-card">
+          <div class="related-card-name">Array Methods</div>
+          <div class="related-card-desc">응답 데이터 가공</div>
+        </a>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script src="../../00_assets/js/navigation.js"></script>
+<script>
+  const resultEl = document.getElementById('fetch-result');
+
+  function setLoading() {
+    resultEl.textContent = '⏳ 요청 중...';
+    resultEl.style.color = 'var(--accent-yellow)';
+  }
+  function setSuccess(text) {
+    resultEl.textContent = text;
+    resultEl.style.color = 'var(--accent-green)';
+  }
+  function setError(text) {
+    resultEl.textContent = text;
+    resultEl.style.color = 'var(--accent-red)';
+  }
+
+  document.getElementById('fetch-get').addEventListener('click', async () => {
+    setLoading();
+    try {
+      const res = await fetch('https://jsonplaceholder.typicode.com/users?_limit=3');
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      setSuccess(
+        '✓ GET 성공\n\n' +
+        data.map(u => `  ID: ${u.id}  이름: ${u.name}  이메일: ${u.email}`).join('\n')
+      );
+    } catch (e) {
+      setError('✕ 에러: ' + e.message);
+    }
+  });
+
+  document.getElementById('fetch-post').addEventListener('click', async () => {
+    setLoading();
+    try {
+      const res = await fetch('https://jsonplaceholder.typicode.com/posts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title: '테스트 제목', body: '내용', userId: 1 }),
+      });
+      const data = await res.json();
+      setSuccess('✓ POST 성공 (mock)\n\n' + JSON.stringify(data, null, 2));
+    } catch (e) {
+      setError('✕ 에러: ' + e.message);
+    }
+  });
+
+  document.getElementById('fetch-fail').addEventListener('click', async () => {
+    setLoading();
+    try {
+      const res = await fetch('https://jsonplaceholder.typicode.com/posts/99999');
+      if (!res.ok) throw new Error(`HTTP ${res.status} — 해당 리소스 없음`);
+      const data = await res.json();
+      setSuccess(JSON.stringify(data));
+    } catch (e) {
+      setError('✕ 에러 처리 성공!\n\n  ' + e.message + '\n\n  → response.ok 체크로 정상 감지됨');
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DICT | media-query</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../00_assets/css/variables.css">
+  <link rel="stylesheet" href="../../00_assets/css/reset.css">
+  <link rel="stylesheet" href="../../00_assets/css/entry.css">
+  <style>
+    .bp-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      margin-bottom: var(--space-5);
+    }
+    .bp-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      padding: var(--space-4);
+      background: var(--bg-elevated);
+      border-radius: var(--radius-sm);
+      border-left: 3px solid var(--border-default);
+    }
+    .bp-icon { font-size: 1.4rem; width: 32px; text-align: center; }
+    .bp-name { font-family: var(--font-mono); font-size: var(--text-sm); color: var(--accent-blue); width: 80px; }
+    .bp-range { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--accent-orange); width: 140px; }
+    .bp-desc { font-size: var(--text-xs); color: var(--text-secondary); }
+    .live-bp-indicator {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-4) var(--space-5);
+      background: var(--bg-elevated);
+      border-radius: var(--radius-sm);
+      margin-bottom: var(--space-5);
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+    }
+    .bp-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent-green); }
+    #current-bp { color: var(--accent-green); font-weight: var(--weight-bold); }
+  </style>
+</head>
+<body>
+
+<div class="page-wrapper">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main-content">
+
+    <nav class="breadcrumb">
+      <a href="#">CSS</a><span>/</span>
+      <a href="#">Responsive</a><span>/</span>
+      <span style="color:var(--text-primary)">media-query</span>
+    </nav>
+
+    <header class="entry-header">
+      <div class="entry-category-tag" style="background:rgba(38,77,228,0.12);color:var(--cat-css);">
+        ● CSS / Responsive
+      </div>
+      <h1 class="entry-title">@media query</h1>
+      <p class="entry-definition">화면 크기/조건에 따라 CSS 스타일을 분기하는 규칙</p>
+    </header>
+
+    <section class="entry-section" id="when" data-toc="언제 쓰는가">
+      <h2 class="section-title"><span class="section-icon icon-when">✦</span>언제 쓰는가</h2>
+      <div class="when-list">
+        <div class="when-item">
+          <span class="when-item-icon">📱</span>
+          <div class="when-item-text">
+            <strong>데스크탑 레이아웃을 모바일로 변환</strong>
+            <p>3열 카드 → 1열, 사이드바 노출 → 숨김, 폰트 크기 축소. mobile-first(min-width) 방식이 현재 실무 표준이다.</p>
+          </div>
+        </div>
+        <div class="when-item">
+          <span class="when-item-icon">🎨</span>
+          <div class="when-item-text">
+            <strong>다크모드 대응</strong>
+            <p><code style="font-family:var(--font-mono);font-size:0.8em;color:var(--accent-purple)">@media (prefers-color-scheme: dark)</code>. OS 설정을 감지해 자동으로 다크모드 스타일을 적용한다. CSS 변수와 함께 쓰면 효율적.</p>
+          </div>
+        </div>
+        <div class="when-item">
+          <span class="when-item-icon">🖨️</span>
+          <div class="when-item-text">
+            <strong>인쇄용 스타일 분리</strong>
+            <p><code style="font-family:var(--font-mono);font-size:0.8em;color:var(--accent-purple)">@media print</code>. 대시보드 리포트를 PDF로 출력할 때 네비게이션, 버튼 등 불필요한 UI를 숨기는 용도.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry-section" id="syntax" data-toc="기본 문법">
+      <h2 class="section-title"><span class="section-icon icon-syntax">&lt;/&gt;</span>기본 문법</h2>
+      <div class="code-block-wrapper">
+        <div class="code-block-label">css — mobile-first 방식 (현재 표준)</div>
+        <pre class="code-block">
+<span class="cm">/* ── Mobile First: 모바일 기본 → 큰 화면으로 확장 ── */</span>
+<span class="sel">.grid</span> {
+  <span class="prp">display</span>:               <span class="val">grid</span>;
+  <span class="prp">grid-template-columns</span>: <span class="val">1fr</span>;       <span class="cm">/* 기본: 1열 (모바일) */</span>
+  <span class="prp">gap</span>:                   <span class="val">16px</span>;
+}
+
+<span class="cm">/* 태블릿 이상 */</span>
+<span class="kw">@media</span> (<span class="prp">min-width</span>: <span class="val">768px</span>) {
+  <span class="sel">.grid</span> { <span class="prp">grid-template-columns</span>: <span class="val">repeat(2, 1fr)</span>; }
+}
+
+<span class="cm">/* 데스크탑 이상 */</span>
+<span class="kw">@media</span> (<span class="prp">min-width</span>: <span class="val">1200px</span>) {
+  <span class="sel">.grid</span> { <span class="prp">grid-template-columns</span>: <span class="val">repeat(3, 1fr)</span>; }
+}
+
+<span class="cm">/* ── 다크모드 ── */</span>
+<span class="kw">@media</span> (<span class="prp">prefers-color-scheme</span>: <span class="val">dark</span>) {
+  <span class="sel">:root</span> {
+    <span class="prp">--bg</span>:   <span class="val">#0d1117</span>;
+    <span class="prp">--text</span>: <span class="val">#e6edf3</span>;
+  }
+}
+
+<span class="cm">/* ── 인쇄 ── */</span>
+<span class="kw">@media</span> <span class="val">print</span> {
+  <span class="sel">.sidebar, .header, .btn</span> { <span class="prp">display</span>: <span class="val">none</span>; }
+  <span class="sel">body</span> { <span class="prp">font-size</span>: <span class="val">12pt</span>; <span class="prp">color</span>: <span class="val">#000</span>; }
+}</pre>
+      </div>
+    </section>
+
+    <section class="entry-section" id="demo" data-toc="라이브 데모">
+      <h2 class="section-title"><span class="section-icon icon-demo">▶</span>라이브 데모</h2>
+      <div class="demo-container">
+        <div class="demo-toolbar">
+          <div class="demo-toolbar-dots">
+            <span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span>
+          </div>
+          <span class="demo-toolbar-title">현재 브레이크포인트 + 실무 기준점</span>
+        </div>
+        <div class="demo-preview">
+
+          <!-- 실시간 브레이크포인트 감지 -->
+          <div class="live-bp-indicator">
+            <span class="bp-dot"></span>
+            현재 뷰포트:&nbsp;<span id="current-bp">—</span>&nbsp;(<span id="current-width">—</span>)
+          </div>
+
+          <!-- 브레이크포인트 목록 -->
+          <div class="bp-list">
+            <div class="bp-item" style="border-left-color:var(--accent-purple)">
+              <span class="bp-icon">📱</span>
+              <span class="bp-name">Mobile</span>
+              <span class="bp-range">~767px</span>
+              <span class="bp-desc">1열, 햄버거 메뉴, 스택 레이아웃</span>
+            </div>
+            <div class="bp-item" style="border-left-color:var(--accent-blue)">
+              <span class="bp-icon">🖥️</span>
+              <span class="bp-name">Tablet</span>
+              <span class="bp-range">768px ~</span>
+              <span class="bp-desc">2열, 사이드바 일부 노출</span>
+            </div>
+            <div class="bp-item" style="border-left-color:var(--accent-green)">
+              <span class="bp-icon">🖥️</span>
+              <span class="bp-name">Desktop</span>
+              <span class="bp-range">1024px ~</span>
+              <span class="bp-desc">3열, 전체 사이드바, 풀 레이아웃</span>
+            </div>
+            <div class="bp-item" style="border-left-color:var(--accent-yellow)">
+              <span class="bp-icon">🖥️</span>
+              <span class="bp-name">Wide</span>
+              <span class="bp-range">1440px ~</span>
+              <span class="bp-desc">max-width 제한, 콘텐츠 중앙 정렬</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry-section" id="mistakes" data-toc="자주 하는 실수">
+      <h2 class="section-title"><span class="section-icon icon-mistake">✕</span>자주 하는 실수</h2>
+      <div class="mistake-list">
+        <div class="mistake-item">
+          <div class="mistake-bad">
+            <div class="mistake-label label-bad">✕ desktop-first (max-width) 방식</div>
+            <pre class="code-block" style="background:transparent;border:none;padding:var(--space-2) 0;font-size:var(--text-sm);">
+<span class="cm">/* 데스크탑 기준 → 모바일로 덮어쓰기 */</span>
+<span class="sel">.grid</span> { <span class="prp">grid-template-columns</span>: <span class="val">repeat(3,1fr)</span>; }
+
+<span class="kw">@media</span> (<span class="prp">max-width</span>: <span class="val">768px</span>) {
+  <span class="sel">.grid</span> { <span class="prp">grid-template-columns</span>: <span class="val">1fr</span>; }  <span class="cm">/* 덮어쓰기 누적 */</span>
+}</pre>
+          </div>
+          <div class="mistake-good">
+            <div class="mistake-label label-good">✓ mobile-first (min-width) 방식</div>
+            <pre class="code-block" style="background:transparent;border:none;padding:var(--space-2) 0;font-size:var(--text-sm);">
+<span class="cm">/* 모바일 기준 → 데스크탑으로 확장 */</span>
+<span class="sel">.grid</span> { <span class="prp">grid-template-columns</span>: <span class="val">1fr</span>; }  <span class="cm">/* 모바일 기본 */</span>
+
+<span class="kw">@media</span> (<span class="prp">min-width</span>: <span class="val">768px</span>) {
+  <span class="sel">.grid</span> { <span class="prp">grid-template-columns</span>: <span class="val">repeat(3,1fr)</span>; }
+}</pre>
+            <div class="mistake-explanation">
+              ⚠️ mobile-first는 모바일 성능이 기본값이라 불필요한 CSS 로딩이 없다. Tailwind, Bootstrap 모두 이 방식. 실무 표준.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry-section" id="related" data-toc="연관 항목">
+      <h2 class="section-title"><span class="section-icon icon-related">↗</span>연관 항목</h2>
+      <div class="related-grid">
+        <a href="../02_layout/flexbox.html" class="related-card">
+          <div class="related-card-name">flexbox</div>
+          <div class="related-card-desc">1차원 레이아웃</div>
+        </a>
+        <a href="#" class="related-card">
+          <div class="related-card-name">container query</div>
+          <div class="related-card-desc">컨테이너 기준 분기</div>
+        </a>
+        <a href="../05_tailwind/utility-classes.html" class="related-card">
+          <div class="related-card-name">Tailwind 반응형</div>
+          <div class="related-card-desc">sm: md: lg: 접두사</div>
+        </a>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script src="../../00_assets/js/navigation.js"></script>
+<script>
+  function updateBP() {
+    const w = window.innerWidth;
+    const bpEl = document.getElementById('current-bp');
+    const wEl  = document.getElementById('current-width');
+    if (!bpEl || !wEl) return;
+    wEl.textContent = w + 'px';
+    if (w < 768)       { bpEl.textContent = '📱 Mobile';  bpEl.style.color = 'var(--accent-purple)'; }
+    else if (w < 1024) { bpEl.textContent = '📟 Tablet';  bpEl.style.color = 'var(--accent-blue)'; }
+    else if (w < 1440) { bpEl.textContent = '🖥 Desktop'; bpEl.style.color = 'var(--accent-green)'; }
+    else               { bpEl.textContent = '🖥 Wide';    bpEl.style.color = 'var(--accent-yellow)'; }
+  }
+  updateBP();
+  window.addEventListener('resize', updateBP);
+</script>
+</body>
+</html>

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DICT | transition</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../00_assets/css/variables.css">
+  <link rel="stylesheet" href="../../00_assets/css/reset.css">
+  <link rel="stylesheet" href="../../00_assets/css/entry.css">
+  <style>
+    /* 데모 버튼 공통 */
+    .demo-btn-base {
+      padding: 12px 24px;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-sans);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-medium);
+      cursor: pointer;
+    }
+    /* 각 transition 예시 */
+    .t-color {
+      background: var(--bg-elevated);
+      color: var(--text-primary);
+      border: 1px solid var(--border-default);
+      transition: background-color 300ms ease, color 300ms ease;
+    }
+    .t-color:hover { background: var(--accent-blue); color: #fff; }
+
+    .t-transform {
+      background: var(--accent-blue);
+      color: #fff;
+      transition: transform 200ms ease, box-shadow 200ms ease;
+    }
+    .t-transform:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(88,166,255,0.35);
+    }
+
+    .t-opacity {
+      background: var(--accent-green);
+      color: #fff;
+      transition: opacity 200ms ease;
+    }
+    .t-opacity:hover { opacity: 0.7; }
+
+    .t-all {
+      background: transparent;
+      color: var(--accent-purple);
+      border: 1px solid var(--accent-purple);
+      transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .t-all:hover {
+      background: var(--accent-purple);
+      color: #fff;
+      transform: scale(1.05);
+    }
+    .t-slow {
+      background: var(--accent-yellow);
+      color: var(--bg-base);
+      transition: transform 1000ms ease;
+    }
+    .t-slow:hover { transform: rotate(15deg); }
+
+    .demo-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-4);
+      align-items: center;
+      margin-bottom: var(--space-5);
+    }
+    .demo-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    .demo-col-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    /* 카드 호버 예시 */
+    .hover-card {
+      width: 160px;
+      padding: var(--space-4);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition:
+        transform 200ms ease,
+        border-color 200ms ease,
+        box-shadow 200ms ease;
+    }
+    .hover-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent-blue);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.4);
+    }
+    .hover-card-title {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-bold);
+      color: var(--text-primary);
+      margin-bottom: var(--space-1);
+    }
+    .hover-card-sub {
+      font-size: var(--text-xs);
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-wrapper">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main-content">
+
+    <nav class="breadcrumb">
+      <a href="#">CSS</a><span>/</span>
+      <a href="#">Animation</a><span>/</span>
+      <span style="color:var(--text-primary)">transition</span>
+    </nav>
+
+    <header class="entry-header">
+      <div class="entry-category-tag" style="background:rgba(38,77,228,0.12);color:var(--cat-css);">
+        ● CSS / Animation
+      </div>
+      <h1 class="entry-title">transition</h1>
+      <p class="entry-definition">CSS 속성 변화를 부드럽게 이어주는 애니메이션 처리</p>
+    </header>
+
+    <section class="entry-section" id="when" data-toc="언제 쓰는가">
+      <h2 class="section-title"><span class="section-icon icon-when">✦</span>언제 쓰는가</h2>
+      <div class="when-list">
+        <div class="when-item">
+          <span class="when-item-icon">🖱️</span>
+          <div class="when-item-text">
+            <strong>버튼/링크/카드 hover 효과</strong>
+            <p>색상 변화, 그림자, 위치 이동을 부드럽게. transition 없으면 즉각 변화가 어색하고 조잡해 보인다. 150~300ms 범위가 실무 표준.</p>
+          </div>
+        </div>
+        <div class="when-item">
+          <span class="when-item-icon">🎛️</span>
+          <div class="when-item-text">
+            <strong>UI 상태 전환 (열기/닫기, 활성/비활성)</strong>
+            <p>드롭다운 노출, 탭 전환, 토글 스위치. 상태 변화를 시각적으로 명확히 전달해 사용자가 무슨 일이 일어났는지 인식하게 한다.</p>
+          </div>
+        </div>
+        <div class="when-item">
+          <span class="when-item-icon">📊</span>
+          <div class="when-item-text">
+            <strong>대시보드 데이터 갱신 피드백</strong>
+            <p>숫자가 업데이트될 때, 로딩 후 콘텐츠가 나타날 때. opacity 또는 transform transition으로 자연스러운 등장 효과를 준다.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry-section" id="syntax" data-toc="기본 문법">
+      <h2 class="section-title"><span class="section-icon icon-syntax">&lt;/&gt;</span>기본 문법</h2>
+      <div class="code-block-wrapper">
+        <div class="code-block-label">css</div>
+        <pre class="code-block">
+<span class="cm">/* ── 기본 형태 ── */</span>
+<span class="prp">transition</span>: <span class="val">속성명 시간 타이밍함수 딜레이</span>;
+
+<span class="cm">/* ── 실무 패턴 ── */</span>
+<span class="sel">.btn</span> {
+  <span class="prp">background</span>: <span class="val">steelblue</span>;
+  <span class="cm">/* 단일 속성 */</span>
+  <span class="prp">transition</span>: <span class="val">background-color 200ms ease</span>;
+}
+<span class="sel">.btn:hover</span> { <span class="prp">background</span>: <span class="val">royalblue</span>; }
+
+<span class="cm">/* ── 다중 속성 (성능상 권장) ── */</span>
+<span class="sel">.card</span> {
+  <span class="prp">transition</span>:
+    <span class="val">transform   200ms ease</span>,
+    <span class="val">box-shadow  200ms ease</span>,
+    <span class="val">border-color 150ms ease</span>;
+}
+
+<span class="cm">/* ── 타이밍 함수 ── */</span>
+<span class="val">ease</span>               <span class="cm">→ 기본 (느리게 시작→빠르게→느리게 끝)</span>
+<span class="val">ease-in</span>            <span class="cm">→ 느리게 시작 (퇴장 효과)</span>
+<span class="val">ease-out</span>           <span class="cm">→ 빠르게 시작 후 감속 (등장 효과)</span>
+<span class="val">linear</span>             <span class="cm">→ 일정 속도 (로딩 바)</span>
+<span class="val">cubic-bezier(x,x,x,x)</span> <span class="cm">→ 커스텀 (Material Design 등)</span>
+
+<span class="cm">/* ── GPU 가속 속성 (이것만 써라) ── */</span>
+<span class="val">transform</span>   <span class="cm">→ translate, scale, rotate (성능 최고)</span>
+<span class="val">opacity</span>     <span class="cm">→ 투명도 (성능 최고)</span>
+<span class="cm">/* ── 피해야 할 속성 ── */</span>
+<span class="val">width, height, top, left</span>  <span class="cm">→ 리플로우 유발, 성능 나쁨</span></pre>
+      </div>
+    </section>
+
+    <section class="entry-section" id="demo" data-toc="라이브 데모">
+      <h2 class="section-title"><span class="section-icon icon-demo">▶</span>라이브 데모</h2>
+      <div class="demo-container">
+        <div class="demo-toolbar">
+          <div class="demo-toolbar-dots">
+            <span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span>
+          </div>
+          <span class="demo-toolbar-title">각 버튼에 마우스를 올려봐라</span>
+        </div>
+        <div class="demo-preview">
+          <div class="demo-row">
+            <div class="demo-col">
+              <button type="button" class="demo-btn-base t-color">색상 전환</button>
+              <span class="demo-col-label">background-color<br>300ms ease</span>
+            </div>
+            <div class="demo-col">
+              <button type="button" class="demo-btn-base t-transform">위로 뜨기</button>
+              <span class="demo-col-label">transform + shadow<br>200ms ease</span>
+            </div>
+            <div class="demo-col">
+              <button type="button" class="demo-btn-base t-opacity">투명도</button>
+              <span class="demo-col-label">opacity<br>200ms ease</span>
+            </div>
+            <div class="demo-col">
+              <button type="button" class="demo-btn-base t-all">확대+색상</button>
+              <span class="demo-col-label">all (주의)<br>250ms cubic</span>
+            </div>
+            <div class="demo-col">
+              <button type="button" class="demo-btn-base t-slow">느린 회전</button>
+              <span class="demo-col-label">transform rotate<br>1000ms ease</span>
+            </div>
+          </div>
+
+          <div style="border-top:1px solid var(--border-default);padding-top:var(--space-5)">
+            <p class="demo-col-label" style="margin-bottom:var(--space-4);">대시보드 카드 hover 패턴</p>
+            <div style="display:flex;gap:var(--space-4);flex-wrap:wrap">
+              <div class="hover-card">
+                <div class="hover-card-title">총 매출</div>
+                <div class="hover-card-sub">₩ 12,340,000</div>
+              </div>
+              <div class="hover-card">
+                <div class="hover-card-title">주문 건수</div>
+                <div class="hover-card-sub">1,243 건</div>
+              </div>
+              <div class="hover-card">
+                <div class="hover-card-title">신규 회원</div>
+                <div class="hover-card-sub">87 명</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry-section" id="mistakes" data-toc="자주 하는 실수">
+      <h2 class="section-title"><span class="section-icon icon-mistake">✕</span>자주 하는 실수</h2>
+      <div class="mistake-list">
+        <div class="mistake-item">
+          <div class="mistake-bad">
+            <div class="mistake-label label-bad">✕ transition: all 남발</div>
+            <pre class="code-block" style="background:transparent;border:none;padding:var(--space-2) 0;font-size:var(--text-sm);">
+<span class="sel">.card</span> {
+  <span class="prp">transition</span>: <span class="val">all 300ms ease</span>;  <span class="cm">/* width, height 포함 → 성능 저하 */</span>
+}</pre>
+          </div>
+          <div class="mistake-good">
+            <div class="mistake-label label-good">✓ 속성 명시</div>
+            <pre class="code-block" style="background:transparent;border:none;padding:var(--space-2) 0;font-size:var(--text-sm);">
+<span class="sel">.card</span> {
+  <span class="prp">transition</span>:
+    <span class="val">transform    200ms ease</span>,   <span class="cm">/* GPU 가속 */</span>
+    <span class="val">box-shadow   200ms ease</span>,
+    <span class="val">opacity      200ms ease</span>;
+}</pre>
+            <div class="mistake-explanation">
+              ⚠️ `all`은 width, height, top, left 등 리플로우를 유발하는 속성까지 포함된다. transform과 opacity만 transition하면 GPU 합성 레이어로 처리되어 60fps 보장.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry-section" id="related" data-toc="연관 항목">
+      <h2 class="section-title"><span class="section-icon icon-related">↗</span>연관 항목</h2>
+      <div class="related-grid">
+        <a href="#" class="related-card">
+          <div class="related-card-name">@keyframes</div>
+          <div class="related-card-desc">반복 애니메이션</div>
+        </a>
+        <a href="#" class="related-card">
+          <div class="related-card-name">transform</div>
+          <div class="related-card-desc">이동/회전/확대</div>
+        </a>
+        <a href="#" class="related-card">
+          <div class="related-card-name">will-change</div>
+          <div class="related-card-desc">GPU 레이어 예약</div>
+        </a>
+      </div>
+    </section>
+
+  </main>
+</div>
+<script src="../../00_assets/js/navigation.js"></script>
+</body>
+</html>
