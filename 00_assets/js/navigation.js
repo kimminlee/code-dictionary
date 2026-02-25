@@ -65,7 +65,7 @@ function renderSidebar(currentPath = '') {
     group.items.forEach(item => {
       const isActive = window.location.pathname.endsWith(item.path.split('/').pop());
       html += `
-        <a href="${rootPath}${item.path}" class="sidebar-nav-item ${isActive ? 'active' : ''}">
+        <a href="/${item.path}" class="sidebar-nav-item ${isActive ? 'active' : ''}">
           <span class="dot" style="background: ${group.color}"></span>
           <span>${item.name}</span>
         </a>`;
@@ -91,7 +91,7 @@ function getRootPath() {
   // dictionary/ 이후의 경로 추출
   const marker = 'dictionary/';
   const idx = path.indexOf(marker);
-  if (idx === -1) return './';  // dictionary 폴더를 못 찾으면 현재 위치 기준
+  if (idx === -1) return './'; 
 
   const afterDict = path.slice(idx + marker.length); // 예: '01_html/01_semantic/button.html'
   const parts = afterDict.split('/').filter(Boolean);
